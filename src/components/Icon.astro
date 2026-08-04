@@ -1,0 +1,45 @@
+---
+// Inline SVG icons. Line-based, technical style.
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+}
+const { name, size = 24, class: cls = '' } = Astro.props;
+
+const paths: Record<string, string> = {
+  // research areas
+  solar:
+    '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>',
+  wave:
+    '<path d="M2 8c2.5 0 2.5 3 5 3s2.5-3 5-3 2.5 3 5 3 2.5-3 5-3"/><path d="M2 14c2.5 0 2.5 3 5 3s2.5-3 5-3 2.5 3 5 3 2.5-3 5-3"/>',
+  cfd:
+    '<path d="M3 6h18M3 6c3 0 3 4 6 4M9 10c3 0 3-4 6-4M15 6c3 0 3 4 6 4"/><path d="M3 16h6M13 16h8M3 20h10"/>',
+  // social / links
+  mail: '<rect x="3" y="5" width="18" height="14"/><path d="m3 6 9 7 9-7"/>',
+  linkedin:
+    '<rect x="3" y="3" width="18" height="18"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 0 1 4 0v4M11 17v-7"/>',
+  scholar:
+    '<path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="M6 10v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  doi: '<path d="M4 4h10l6 6v10H4z"/><path d="M14 4v6h6"/>',
+  pin: '<path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/>',
+  calendar: '<rect x="3" y="4" width="18" height="17"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+};
+
+const d = paths[name] ?? '';
+---
+
+<svg
+  class={cls}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={d}
+/>

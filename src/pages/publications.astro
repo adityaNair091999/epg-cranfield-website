@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PublicationItem from '../components/PublicationItem.astro';
+import { getPublications } from '../lib/content';
+
+const pubs = await getPublications();
+const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
+---
+
+<Base title="Publications — Energy and Power Group">
+  <PageHero
+    eyebrow="Publications"
+    title="Publications"
+    intro="Peer-reviewed journal papers and conference contributions from the group. Filter by year or search by title, author or journal."
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="filters">
+        <div class="filters__search">
+          <input
+            type="search"
+            id="pub-search"
+            placeholder="Search title, author or journal…"
+            aria-label="Search publications"
+          />
+        </div>
+        <div class="filters__years" role="group" aria-label="Filter by year">
+          <button class="yfilter is-active" data-year="all">All</button>
+          {years.map((y) => <button class="yfilter" data-year={y}>{y}</button>)}
+        </div>
+      </div>
+
+      <p class="results-count mono" id="results-count">{pubs.length} publications</p>
+
+      <div class="pub-list" id="pub-list">
+        {pubs.map((pub) => (
+          <div
+            class="pub-row"
+            data-year={pub.year}
+            data-search={`${pub.title} ${pub.authors.join(' ')} ${pub.journal}`.toLowerCase()}
+          >
+            <PublicationItem publication={pub} />
+          </div>
+        ))}
+      </div>
+      <p class="no-results mono" id="no-results" hidden>No publications match your filters.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .filters { display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.4rem; }
+  .filters__search input {
+    font-family: var(--font-body); font-size: 1rem; padding: 0.7rem 1rem;
+    border: 1px solid var(--border); background: var(--surface); min-width: 280px; color: var(--text);
+  }
+  .filters__search input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .filters__years { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .yfilter {
+    font-family: var(--font-head); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.95rem;
+    padding: 0.45rem 0.9rem; border: 1px solid var(--border); background: var(--surface); color: var(--steel-600); cursor: pointer;
+  }
+  .yfilter:hover { border-color: var(--ink); color: var(--ink); }
+  .yfilter.is-active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .results-count { color: var(--text-dim); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .pub-list { border-bottom: 1px solid var(--border); }
+  .no-results { padding: 2rem 0; color: var(--text-dim); }
+</style>
+
+<script>
+  const search = document.getElementById('pub-search') as HTMLInputElement | null;
+  const yearBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.yfilter'));
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('.pub-row'));
+  const count = document.getElementById('results-count');
+  const none = document.getElementById('no-results');
+  let activeYear = 'all';
+
+  function apply() {
+    const q = (search?.value ?? '').trim().toLowerCase();
+    let visible = 0;
+    rows.forEach((row) => {
+      const matchYear = activeYear === 'all' || row.dataset.year === activeYear;
+      const matchText = !q || (row.dataset.search ?? '').includes(q);
+      const show = matchYear && matchText;
+      row.hidden = !show;
+      if (show) visible++;
+    });
+    if (count) count.textContent = `${visible} publication${visible !== 1 ? 's' : ''}`;
+    if (none) none.hidden = visible !== 0;
+  }
+
+  search?.addEventListener('input', apply);
+  yearBtns.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      yearBtns.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      activeYear = btn.dataset.year ?? 'all';
+      apply();
+    })
+  );
+</script>

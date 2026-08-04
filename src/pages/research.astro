@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getProjects } from '../lib/content';
+
+const projects = await getProjects();
+const ongoing = projects.filter((p) => p.status === 'ongoing');
+const completed = projects.filter((p) => p.status === 'completed');
+---
+
+<Base title="Research — Energy and Power Group">
+  <PageHero
+    eyebrow="Research"
+    title="Research Projects"
+    intro="Our work spans floating photovoltaics, wave–structure interaction and computational fluid dynamics — combining high-fidelity simulation with experimental validation."
+  />
+
+  <section class="section">
+    <div class="container">
+      {ongoing.length > 0 && (
+        <>
+          <div class="rgroup-head">
+            <h2>Ongoing</h2>
+            <span class="mono muted">{ongoing.length} project{ongoing.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div class="grid grid-3">
+            {ongoing.map((p) => <ProjectCard project={p} />)}
+          </div>
+        </>
+      )}
+
+      {completed.length > 0 && (
+        <>
+          <div class="rgroup-head rgroup-head--spaced">
+            <h2>Completed</h2>
+            <span class="mono muted">{completed.length} project{completed.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div class="grid grid-3">
+            {completed.map((p) => <ProjectCard project={p} />)}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rgroup-head { display: flex; align-items: baseline; gap: 1rem; border-bottom: 2px solid var(--ink); padding-bottom: 0.6rem; margin-bottom: 2rem; }
+  .rgroup-head--spaced { margin-top: 4rem; }
+  .rgroup-head h2 { margin: 0; }
+</style>

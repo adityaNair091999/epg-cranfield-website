@@ -1,0 +1,72 @@
+---
+import type { Publication } from '../lib/types';
+import Icon from './Icon.astro';
+interface Props { publication: Publication; }
+const { publication: pub } = Astro.props;
+const authors = pub.authors?.join(', ') ?? '';
+---
+
+<article class="pub" data-year={pub.year}>
+  <div class="pub__year mono">{pub.year}</div>
+  <div class="pub__main">
+    <h3 class="pub__title">{pub.title}</h3>
+    <p class="pub__authors">{authors}</p>
+    <p class="pub__venue"><span class="mono">{pub.journal}</span>{pub.featured && <span class="chip chip--ongoing pub__featured">Featured</span>}</p>
+
+    {pub.abstract && (
+      <details class="pub__abstract">
+        <summary>Abstract</summary>
+        <p>{pub.abstract}</p>
+      </details>
+    )}
+
+    <div class="pub__links">
+      {pub.doi && (
+        <a href={pub.doi} target="_blank" rel="noopener" class="pub__link"><Icon name="doi" size={16} /> DOI</a>
+      )}
+      {pub.bibtex && (
+        <details class="pub__bibtex">
+          <summary>BibTeX</summary>
+          <pre>{pub.bibtex}</pre>
+        </details>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .pub {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1.5rem;
+    padding: 1.6rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .pub__year { font-size: 1.5rem; font-weight: 600; color: var(--accent); }
+  .pub__title { font-family: var(--font-body); text-transform: none; font-size: 1.25rem; font-weight: 600; letter-spacing: 0; line-height: 1.25; color: var(--ink); margin-bottom: 0.4rem; }
+  .pub__authors { color: var(--text); font-size: 0.98rem; margin-bottom: 0.2rem; }
+  .pub__venue { color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 0.7rem; }
+  .pub__featured { font-size: 0.6rem; }
+  .pub__abstract, .pub__bibtex { margin-top: 0.7rem; }
+  .pub__abstract summary, .pub__bibtex summary {
+    cursor: pointer; font-family: var(--font-head); text-transform: uppercase;
+    letter-spacing: 0.08em; font-size: 0.85rem; color: var(--steel-600);
+  }
+  .pub__abstract summary:hover, .pub__bibtex summary:hover { color: var(--accent); }
+  .pub__abstract p { margin-top: 0.5rem; color: var(--text-dim); font-size: 0.95rem; max-width: 70ch; }
+  .pub__links { display: flex; align-items: flex-start; gap: 1.2rem; margin-top: 0.8rem; flex-wrap: wrap; }
+  .pub__link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--font-head); text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 0.9rem; color: var(--ink); border-bottom: 2px solid var(--accent); padding-bottom: 2px;
+  }
+  .pub__link:hover { color: var(--accent); }
+  .pub__bibtex pre {
+    margin-top: 0.5rem; background: var(--steel-900); color: var(--paper);
+    padding: 1rem; font-size: 0.78rem; overflow-x: auto; font-family: var(--font-mono);
+  }
+  @media (max-width: 560px) {
+    .pub { grid-template-columns: 1fr; gap: 0.4rem; }
+    .pub__year { font-size: 1.1rem; }
+  }
+</style>

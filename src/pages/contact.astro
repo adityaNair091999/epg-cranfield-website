@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base title="Contact — Energy and Power Group">
+  <PageHero
+    eyebrow="Get in Touch"
+    title="Contact"
+    intro="Questions about our research, collaboration or joining the group? Reach out — we are based at Cranfield University."
+  />
+
+  <section class="section">
+    <div class="container contact">
+      <!-- LEFT: details + map -->
+      <div class="contact__info">
+        <div class="contact__block">
+          <h3>Address</h3>
+          <p class="mono">
+            Energy and Power Group<br />
+            School of Water, Energy and Environment<br />
+            Cranfield University<br />
+            College Road, Cranfield<br />
+            Bedfordshire, MK43 0AL<br />
+            United Kingdom
+          </p>
+        </div>
+        <div class="contact__block">
+          <h3>Email</h3>
+          <a href="mailto:luofeng.huang@cranfield.ac.uk" class="contact__email">
+            <Icon name="mail" size={18} /> luofeng.huang@cranfield.ac.uk
+          </a>
+        </div>
+        <div class="contact__block">
+          <h3>Group Lead</h3>
+          <p>Dr. Luofeng Huang<br /><span class="muted">Lecturer in Offshore Renewable Energy</span></p>
+        </div>
+
+        <div class="contact__map">
+          <iframe
+            title="Map of Cranfield University"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-0.6620%2C52.0560%2C-0.5960%2C52.0870&layer=mapnik&marker=52.0716%2C-0.6286"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+          <a class="contact__map-link mono" href="https://www.openstreetmap.org/?mlat=52.0716&mlon=-0.6286#map=15/52.0716/-0.6286" target="_blank" rel="noopener">
+            <Icon name="pin" size={14} /> View larger map
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT: form -->
+      <div class="contact__form-wrap">
+        <h3>Send a message</h3>
+        <p class="muted contact__form-note">
+          This form is powered by Netlify Forms and works once the site is deployed to Netlify.
+        </p>
+        <!-- Netlify picks up forms via the data-netlify attribute at build time. -->
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/contact/">
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hidden-field">
+            <label>Don’t fill this out: <input name="bot-field" /></label>
+          </p>
+
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+          <div class="field">
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" />
+          </div>
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+          </div>
+          <button type="submit" class="btn btn--accent">Send message <Icon name="arrow" size={18} /></button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; }
+  .contact__block { margin-bottom: 1.8rem; }
+  .contact__block h3 { font-size: 1.05rem; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.5rem; }
+  .contact__block p { margin: 0; line-height: 1.6; }
+  .contact__email { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.95rem; }
+  .contact__map { margin-top: 1rem; border: 1px solid var(--border); border-top: 3px solid var(--ink); }
+  .contact__map iframe { width: 100%; height: 300px; border: 0; display: block; filter: grayscale(0.2) contrast(1.05); }
+  .contact__map-link { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 0.9rem; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .contact__form-wrap { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--accent); padding: 2rem; }
+  .contact__form-wrap h3 { font-size: 1.6rem; }
+  .contact__form-note { font-size: 0.85rem; margin-bottom: 1.4rem; }
+  .field { margin-bottom: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  .field label { font-family: var(--font-head); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.9rem; color: var(--steel-600); }
+  .field input, .field textarea {
+    font-family: var(--font-body); font-size: 1rem; padding: 0.7rem 0.9rem;
+    border: 1px solid var(--border); background: var(--off-white); color: var(--text); resize: vertical;
+  }
+  .field input:focus, .field textarea:focus { outline: 2px solid var(--accent); border-color: var(--accent); background: var(--white); }
+  .hidden-field { display: none; }
+
+  @media (max-width: 820px) { .contact { grid-template-columns: 1fr; gap: 2.2rem; } }
+</style>

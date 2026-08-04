@@ -1,0 +1,58 @@
+---
+// Minimal Portable Text renderer — handles the block styles and marks used by
+// news posts and opportunities. Consecutive bullet items are grouped into a list.
+import type { PortableTextBlock, PortableTextSpan } from '../lib/types';
+
+interface Props {
+  value: PortableTextBlock[];
+}
+const { value = [] } = Astro.props;
+
+function renderSpans(children: PortableTextSpan[], markDefs: PortableTextBlock['markDefs'] = []) {
+  return children
+    .map((span) => {
+      let text = span.text ?? '';
+      const marks = span.marks ?? [];
+      // link mark defs
+      const link = marks
+        .map((m) => markDefs?.find((def) => def._key === m))
+        .find((def) => def && def._type === 'link');
+      if (marks.includes('strong')) text = `<strong>${text}</strong>`;
+      if (marks.includes('em')) text = `<em>${text}</em>`;
+      if (link && link.href) text = `<a href="${link.href}" target="_blank" rel="noopener">${text}</a>`;
+      return text;
+    })
+    .join('');
+}
+
+// Group blocks, coalescing bullet runs into <ul>.
+type Item = { type: 'html'; html: string } | { type: 'list'; items: string[] };
+const items: Item[] = [];
+for (const block of value) {
+  if (!block || block._type !== 'block') continue;
+  const inner = renderSpans(block.children ?? [], block.markDefs);
+  if (block.listItem === 'bullet') {
+    const last = items[items.length - 1];
+    if (last && last.type === 'list') last.items.push(inner);
+    else items.push({ type: 'list', items: [inner] });
+    continue;
+  }
+  const style = block.style ?? 'normal';
+  let html = '';
+  if (style === 'h2') html = `<h2>${inner}</h2>`;
+  else if (style === 'h3') html = `<h3>${inner}</h3>`;
+  else if (style === 'blockquote') html = `<blockquote>${inner}</blockquote>`;
+  else html = `<p>${inner}</p>`;
+  items.push({ type: 'html', html });
+}
+---
+
+<div class="prose">
+  {items.map((it) =>
+    it.type === 'list' ? (
+      <ul set:html={it.items.map((li) => `<li>${li}</li>`).join('')} />
+    ) : (
+      <Fragment set:html={it.html} />
+    )
+  )}
+</div>

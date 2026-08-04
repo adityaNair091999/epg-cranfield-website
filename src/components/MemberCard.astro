@@ -1,0 +1,51 @@
+---
+import type { Member } from '../lib/types';
+import Icon from './Icon.astro';
+interface Props { member: Member; }
+const { member } = Astro.props;
+---
+
+<article class="member card">
+  <div class="member__photo">
+    {member.photoUrl
+      ? <img src={member.photoUrl} alt={member.name} loading="lazy" />
+      : <div class="member__ph">{member.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</div>}
+  </div>
+  <div class="member__body">
+    <h3 class="member__name">{member.name}</h3>
+    <p class="member__role mono">{member.role}</p>
+    <p class="member__bio">{member.bio}</p>
+    <div class="member__links">
+      {member.email && (
+        <a href={`mailto:${member.email}`} aria-label={`Email ${member.name}`}><Icon name="mail" size={18} /></a>
+      )}
+      {member.linkedin && (
+        <a href={member.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn"><Icon name="linkedin" size={18} /></a>
+      )}
+      {member.googleScholar && (
+        <a href={member.googleScholar} target="_blank" rel="noopener" aria-label="Google Scholar"><Icon name="scholar" size={18} /></a>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .member { display: flex; flex-direction: column; }
+  .member__photo { aspect-ratio: 4 / 3; overflow: hidden; background: var(--steel-800); }
+  .member__photo img { width: 100%; height: 100%; object-fit: cover; }
+  .member__ph {
+    width: 100%; height: 100%; display: grid; place-items: center;
+    font-family: var(--font-head); font-size: 3rem; color: var(--paper);
+    background: linear-gradient(135deg, var(--steel-700), var(--steel-900));
+  }
+  .member__body { padding: 1.3rem 1.4rem 1.5rem; display: flex; flex-direction: column; flex: 1; }
+  .member__name { margin: 0 0 0.2rem; font-size: 1.5rem; }
+  .member__role { color: var(--accent); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 0.8rem; }
+  .member__bio { color: var(--text-dim); font-size: 0.95rem; flex: 1; }
+  .member__links { display: flex; gap: 0.5rem; margin-top: 1rem; }
+  .member__links a {
+    display: grid; place-items: center; width: 38px; height: 38px;
+    border: 1px solid var(--border); color: var(--steel-600);
+  }
+  .member__links a:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+</style>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9d2d8"/><stop offset="1" stop-color="#e7ebee"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9aa7b0"/><stop offset="1" stop-color="#6f7d88"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <rect y="360" width="640" height="440" fill="url(#sea)"/>
+  <!-- horizon structures -->
+  <g stroke="#5b6870" stroke-width="2" opacity="0.5">
+    <line x1="90" y1="360" x2="90" y2="320"/><line x1="70" y1="322" x2="110" y2="322"/>
+    <line x1="540" y1="360" x2="540" y2="330"/><circle cx="540" cy="326" r="6" fill="none"/>
+  </g>
+  <!-- rows of tilted floating PV panels -->
+  <g stroke="#2f3a42" stroke-width="2">
+    <g fill="#464f57">
+      <g transform="translate(0,430)">
+        <g id="row1">
+          <polygon points="40,40 130,20 130,44 40,64"/>
+          <polygon points="160,40 250,20 250,44 160,64"/>
+          <polygon points="280,40 370,20 370,44 280,64"/>
+          <polygon points="400,40 490,20 490,44 400,64"/>
+          <polygon points="520,40 610,20 610,44 520,64"/>
+        </g>
+      </g>
+      <g transform="translate(-30,540)">
+        <use href="#row1"/>
+      </g>
+      <g transform="translate(30,660)">
+        <use href="#row1"/>
+      </g>
+    </g>
+  </g>
+  <!-- panel grid lines -->
+  <g stroke="#8a949c" stroke-width="1" opacity="0.6">
+    <g transform="translate(0,430)">
+      <line x1="70" y1="27" x2="70" y2="58"/><line x1="100" y1="24" x2="100" y2="54"/>
+      <line x1="190" y1="27" x2="190" y2="58"/><line x1="220" y1="24" x2="220" y2="54"/>
+    </g>
+  </g>
+  <!-- water ripples -->
+  <g stroke="#5b6870" stroke-width="1.5" fill="none" opacity="0.45">
+    <path d="M0 620 q40 -10 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0"/>
+    <path d="M0 690 q40 -10 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0"/>
+    <path d="M0 760 q40 -10 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0"/>
+  </g>
+</svg>

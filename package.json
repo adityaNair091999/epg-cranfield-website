@@ -1,0 +1,20 @@
+{
+  "name": "energy-power-group-web",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Website for the Energy and Power Group, Cranfield University (Astro frontend).",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/barlow": "^5.1.0",
+    "@fontsource/barlow-condensed": "^5.1.0",
+    "@sanity/client": "^6.24.1",
+    "@sanity/image-url": "^1.1.0",
+    "astro": "^7.1.6"
+  }
+}

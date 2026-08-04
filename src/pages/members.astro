@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import MemberCard from '../components/MemberCard.astro';
+import { getMembers } from '../lib/content';
+
+const members = await getMembers();
+const current = members.filter((m) => m.current);
+const alumni = members.filter((m) => !m.current);
+---
+
+<Base title="Members — Energy and Power Group">
+  <PageHero
+    eyebrow="People"
+    title="Members"
+    intro="The researchers, students and staff driving our offshore renewable energy work."
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="rgroup-head">
+        <h2>Current Members</h2>
+        <span class="mono muted">{current.length} people</span>
+      </div>
+      <div class="grid grid-3">
+        {current.map((m) => <MemberCard member={m} />)}
+      </div>
+
+      {alumni.length > 0 && (
+        <>
+          <div class="rgroup-head rgroup-head--spaced">
+            <h2>Alumni</h2>
+            <span class="mono muted">{alumni.length} people</span>
+          </div>
+          <div class="grid grid-3">
+            {alumni.map((m) => <MemberCard member={m} />)}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rgroup-head { display: flex; align-items: baseline; gap: 1rem; border-bottom: 2px solid var(--ink); padding-bottom: 0.6rem; margin-bottom: 2rem; }
+  .rgroup-head--spaced { margin-top: 4rem; }
+  .rgroup-head h2 { margin: 0; }
+</style>

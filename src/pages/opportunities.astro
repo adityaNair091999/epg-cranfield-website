@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PortableText from '../components/PortableText.astro';
+import Icon from '../components/Icon.astro';
+import { getOpportunities } from '../lib/content';
+
+const opps = await getOpportunities();
+const open = opps.filter((o) => o.open);
+const closed = opps.filter((o) => !o.open);
+
+function fmtDeadline(d?: string) {
+  if (!d) return null;
+  return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+---
+
+<Base title="Opportunities — Energy and Power Group">
+  <PageHero
+    eyebrow="Join Us"
+    title="Opportunities"
+    intro="Open PhD studentships, postdoctoral positions and other opportunities to join the Energy and Power Group."
+  />
+
+  <section class="section">
+    <div class="container">
+      {open.length === 0 && closed.length === 0 && (
+        <p class="muted">No open positions right now. We welcome speculative enquiries — see the contact page.</p>
+      )}
+
+      {open.map((opp) => (
+        <article class="opp card">
+          <div class="opp__head">
+            <div>
+              <span class="chip chip--open">{opp.type}</span>
+              {opp.open && <span class="chip chip--open opp__status">Open</span>}
+              <h2 class="opp__title">{opp.title}</h2>
+            </div>
+            {opp.deadline && (
+              <div class="opp__deadline">
+                <Icon name="calendar" size={18} />
+                <div>
+                  <span class="mono opp__deadline-label">Deadline</span>
+                  <strong>{fmtDeadline(opp.deadline)}</strong>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div class="opp__desc">
+            <PortableText value={opp.description} />
+          </div>
+
+          <div class="opp__apply">
+            <h3>How to apply</h3>
+            <p>{opp.howToApply}</p>
+          </div>
+        </article>
+      ))}
+
+      {closed.length > 0 && (
+        <div class="opp-closed">
+          <h2 class="opp-closed__head">Recently closed</h2>
+          {closed.map((opp) => (
+            <div class="opp-closed__row">
+              <span class="chip chip--closed">{opp.type}</span>
+              <span>{opp.title}</span>
+              <span class="mono muted">Closed</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .opp { padding: 2rem 2rem 2.2rem; margin-bottom: 2rem; }
+  .opp__head { display: flex; justify-content: space-between; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; margin-bottom: 1rem; }
+  .opp__status { margin-left: 0.4rem; }
+  .opp__title { margin-top: 0.7rem; font-size: 1.9rem; }
+  .opp__deadline { display: flex; align-items: center; gap: 0.6rem; color: var(--accent); border: 1px solid var(--border); padding: 0.6rem 0.9rem; }
+  .opp__deadline-label { display: block; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel-400); }
+  .opp__deadline strong { color: var(--ink); font-family: var(--font-head); font-size: 1.05rem; letter-spacing: 0.02em; }
+  .opp__desc { margin-bottom: 1.4rem; }
+  .opp__apply { border-top: 1px solid var(--border); padding-top: 1.2rem; }
+  .opp__apply h3 { font-size: 1.15rem; color: var(--accent); margin-bottom: 0.4rem; }
+  .opp__apply p { color: var(--text-dim); margin: 0; }
+
+  .opp-closed { margin-top: 3rem; }
+  .opp-closed__head { font-size: 1.4rem; border-bottom: 2px solid var(--ink); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+  .opp-closed__row { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
+</style>

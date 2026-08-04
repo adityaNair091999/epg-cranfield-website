@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+studio/node_modules/
+
+# build output
+dist/
+studio/dist/
+
+# astro
+.astro/
+
+# environment (never commit real keys)
+.env
+.env.production
+.env.local
+studio/.env
+
+# sanity
+.sanity/
+studio/.sanity/
+
+# os / editor
+.DS_Store
+*.log
+npm-debug.log*
+.vscode/
+.idea/
+
+# netlify
+.netlify/

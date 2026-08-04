@@ -1,0 +1,131 @@
+---
+import Corners from './Corners.astro';
+const links = [
+  { href: '/research', label: 'Research' },
+  { href: '/publications', label: 'Publications' },
+  { href: '/members', label: 'Members' },
+  { href: '/news', label: 'News' },
+  { href: '/opportunities', label: 'Opportunities' },
+  { href: '/contact', label: 'Contact' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="nav__brand" href="/">
+      <span class="nav__mark blueprint">
+        <Corners />
+        EPG
+      </span>
+      <span class="nav__name">
+        Energy &amp; Power Group
+        <small>Cranfield University</small>
+      </span>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      {links.map((l) => (
+        <a href={l.href} class:list={['nav__link', { 'is-active': path === l.href }]}>{l.label}</a>
+      ))}
+    </nav>
+
+    <a href="/research" class="nav__cta">Explore Our Research</a>
+
+    <button class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="nav__mobile" id="mobile-menu" hidden>
+    {links.map((l) => (
+      <a href={l.href} class:list={['nav__mobile-link', { 'is-active': path === l.href }]}>{l.label}</a>
+    ))}
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(242, 242, 243, 0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav__inner {
+    min-height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-block: 12px;
+  }
+  .nav__brand { display: flex; align-items: center; gap: 12px; margin-right: auto; color: var(--ink); }
+  .nav__mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border: 1px solid var(--border);
+    font-family: var(--font-head); font-weight: 700; font-size: 12px; letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+  .nav__name {
+    font-family: var(--font-head); font-weight: 600; font-size: 16px; line-height: 1.05;
+    display: flex; flex-direction: column; gap: 1px; color: var(--ink);
+  }
+  .nav__name small {
+    font-family: var(--font-body); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-faint); font-weight: 400;
+  }
+  .nav__links { display: flex; gap: 24px; font-size: 14px; }
+  .nav__link { color: var(--ink); padding: 4px 0; border-bottom: 2px solid transparent; }
+  .nav__link:hover { color: var(--accent-dark); }
+  .nav__link.is-active { color: var(--accent-dark); border-bottom-color: var(--accent); }
+
+  .nav__cta {
+    display: inline-flex; align-items: center;
+    font-family: var(--font-head); font-weight: 600; font-size: 13px;
+    color: var(--paper); background: var(--accent); border: 1px solid var(--accent);
+    padding: 8px 16px;
+  }
+  .nav__cta:hover { background: var(--accent-600); border-color: var(--accent-600); color: var(--paper); }
+
+  .nav__toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 5px;
+    width: 42px; height: 42px; background: transparent; border: 1px solid var(--border); cursor: pointer;
+  }
+  .nav__toggle span { display: block; height: 2px; width: 20px; margin: 0 auto; background: var(--ink); transition: transform 0.2s ease, opacity 0.2s ease; }
+  .nav__toggle[aria-expanded='true'] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav__toggle[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+  .nav__toggle[aria-expanded='true'] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .nav__mobile { display: none; flex-direction: column; background: var(--bg); border-top: 1px solid var(--border); }
+  .nav__mobile-link {
+    font-family: var(--font-head); font-size: 1.1rem; color: var(--ink);
+    padding: 14px var(--gutter); border-bottom: 1px solid var(--border);
+  }
+  .nav__mobile-link.is-active { color: var(--accent-dark); }
+
+  @media (max-width: 900px) {
+    .nav__links, .nav__cta { display: none; }
+    .nav__toggle { display: flex; }
+    .nav__mobile[data-open] { display: flex; }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector('.nav__toggle');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      const open = menu.hasAttribute('data-open');
+      if (open) {
+        menu.removeAttribute('data-open');
+        menu.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+      } else {
+        menu.setAttribute('data-open', '');
+        menu.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+      }
+    });
+  }
+</script>

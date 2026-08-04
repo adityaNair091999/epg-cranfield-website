@@ -62,6 +62,15 @@ export interface NewsPost {
   body: PortableText;
 }
 
+export interface SiteSettings {
+  showResearch?: boolean;
+  showPublications?: boolean;
+  showMembers?: boolean;
+  showNews?: boolean;
+  showOpportunities?: boolean;
+  showContact?: boolean;
+}
+
 export interface Opportunity {
   _id: string;
   title: string;

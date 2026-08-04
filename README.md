@@ -342,6 +342,18 @@ fill in forms, and click **Publish**. The website updates itself.
 > the boxes, and click **Publish** again. To remove something, open it and use
 > the **three-dots menu (⋮) → Delete**.
 
+## B4b. Show or hide a menu tab
+
+You can turn the website's top-menu tabs (Research, Publications, Members, News,
+Opportunities, Contact) on or off yourself — no code needed:
+
+1. In the Studio, click **Site Settings** at the top of the left-hand list.
+2. Toggle any tab **off** to hide it from the menu, or **on** to show it.
+3. Click **Publish**.
+
+Within about a minute the website rebuilds and the menu updates. (The Home page /
+logo is always shown.)
+
 ## B5. Changing your mind / undo
 
 Every change is only live after you press **Publish**. If you make a mistake,

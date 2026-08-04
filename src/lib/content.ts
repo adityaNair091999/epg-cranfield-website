@@ -15,6 +15,7 @@ import {
   recentNewsQuery,
   newsPostQuery,
   opportunitiesQuery,
+  siteSettingsQuery,
 } from './queries';
 import {
   sampleMembers,
@@ -29,6 +30,7 @@ import type {
   Project,
   NewsPost,
   Opportunity,
+  SiteSettings,
 } from './types';
 
 /**
@@ -57,6 +59,21 @@ export const getFeaturedProjects = () =>
 export const getNews = () => load<NewsPost>(newsQuery, sampleNews);
 export const getRecentNews = () => load<NewsPost>(recentNewsQuery, sampleNews.slice(0, 3));
 export const getOpportunities = () => load<Opportunity>(opportunitiesQuery, sampleOpportunities);
+
+/**
+ * Site settings (menu visibility). Returns {} when Sanity isn't configured or
+ * no settings document exists — so every tab shows by default (a missing/true
+ * value means "visible"; only an explicit false hides a tab).
+ */
+export async function getSiteSettings(): Promise<SiteSettings> {
+  if (!isSanityConfigured || !sanityClient) return {};
+  try {
+    return (await sanityClient.fetch<SiteSettings | null>(siteSettingsQuery)) ?? {};
+  } catch (err) {
+    console.warn('[content] Sanity fetch failed, using defaults:', err);
+    return {};
+  }
+}
 
 /** Single news post by slug (for the news detail page). */
 export async function getNewsPost(slug: string): Promise<NewsPost | null> {

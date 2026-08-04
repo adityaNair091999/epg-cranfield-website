@@ -44,3 +44,7 @@ export const newsPostQuery = `*[_type == "newsPost" && slug.current == $slug][0]
 export const opportunitiesQuery = `*[_type == "opportunity"] | order(open desc, deadline asc){
   _id, title, type, description, deadline, howToApply, open
 }`;
+
+export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
+  showResearch, showPublications, showMembers, showNews, showOpportunities, showContact
+}`;

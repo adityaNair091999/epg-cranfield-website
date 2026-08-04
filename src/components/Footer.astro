@@ -1,5 +1,16 @@
 ---
+import { getSiteSettings } from '../lib/content';
 const year = new Date().getFullYear();
+
+const settings = (await getSiteSettings()) as Record<string, boolean | undefined>;
+const allLinks = [
+  { href: '/research', label: 'Research', key: 'showResearch' },
+  { href: '/publications', label: 'Publications', key: 'showPublications' },
+  { href: '/members', label: 'Members', key: 'showMembers' },
+  { href: '/news', label: 'News', key: 'showNews' },
+  { href: '/opportunities', label: 'Opportunities', key: 'showOpportunities' },
+];
+const links = allLinks.filter((l) => settings[l.key] !== false);
 ---
 
 <footer class="footer">
@@ -15,11 +26,7 @@ const year = new Date().getFullYear();
       <div>
         <div class="footer__label">Navigate</div>
         <div class="footer__links">
-          <a href="/research">Research</a>
-          <a href="/publications">Publications</a>
-          <a href="/members">Members</a>
-          <a href="/news">News</a>
-          <a href="/opportunities">Opportunities</a>
+          {links.map((l) => <a href={l.href}>{l.label}</a>)}
         </div>
       </div>
 

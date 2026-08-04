@@ -1,13 +1,19 @@
 ---
 import Corners from './Corners.astro';
-const links = [
-  { href: '/research', label: 'Research' },
-  { href: '/publications', label: 'Publications' },
-  { href: '/members', label: 'Members' },
-  { href: '/news', label: 'News' },
-  { href: '/opportunities', label: 'Opportunities' },
-  { href: '/contact', label: 'Contact' },
+import { getSiteSettings } from '../lib/content';
+
+// Menu tabs — each can be hidden from Sanity's "Site Settings" (a value of
+// exactly false hides it; anything else shows it).
+const settings = (await getSiteSettings()) as Record<string, boolean | undefined>;
+const allLinks = [
+  { href: '/research', label: 'Research', key: 'showResearch' },
+  { href: '/publications', label: 'Publications', key: 'showPublications' },
+  { href: '/members', label: 'Members', key: 'showMembers' },
+  { href: '/news', label: 'News', key: 'showNews' },
+  { href: '/opportunities', label: 'Opportunities', key: 'showOpportunities' },
+  { href: '/contact', label: 'Contact', key: 'showContact' },
 ];
+const links = allLinks.filter((l) => settings[l.key] !== false);
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 

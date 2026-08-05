@@ -49,7 +49,8 @@ form. The website automatically shows the latest content.
 | ---------------- | ------------------------------------------------------- |
 | **Astro**        | Builds the fast website (the pages people see).         |
 | **Sanity.io**    | The content editor where you add members, papers, etc.  |
-| **Netlify**      | Hosts the website online, for free.                     |
+| **Cloudflare**   | Hosts the website online, for free.                     |
+| **Web3Forms**    | Delivers contact-form messages to email, for free.      |
 | **GitHub**       | Stores the code and triggers automatic re-publishing.   |
 
 Project layout:
@@ -64,8 +65,8 @@ website/
 ├── studio/               ← the Sanity content editor
 │   └── schemaTypes/      ← definitions of Member, Publication, etc.
 ├── sanity-seed/          ← sample content you can load into Sanity
-├── netlify.toml          ← Netlify build settings
-├── .env                  ← your Sanity connection settings (kept private)
+├── wrangler.toml         ← Cloudflare deploy settings (serves the dist/ folder)
+├── .env                  ← your Sanity + form keys (kept private, not on GitHub)
 └── README.md             ← this file
 ```
 
@@ -209,67 +210,54 @@ on the homepage.
 
 ---
 
-## 8. How to publish changes online (deploy to Netlify)
+## 8. How the site is hosted (Cloudflare) and how to publish changes
 
-The website re-publishes itself automatically whenever the code changes on
-GitHub. Set this up once:
+The site is hosted on **Cloudflare** (Workers & Pages), connected to the GitHub
+repository. This is already set up — you don't need to redo it. For reference,
+the configuration is:
 
-### One-time setup
+- **Repository:** <https://github.com/adityaNair091999/epg-cranfield-website>
+- **Build command:** `npm run build`
+- **Deploy command:** `npx wrangler deploy` (reads `wrangler.toml`, which serves
+  the built `dist/` folder as static files)
+- **Build variables** (set in Cloudflare → project → Settings → Variables):
 
-1. Put this project on **GitHub** (create a repository and push the code). If you
-   are unsure how, ask a colleague or see <https://docs.github.com/get-started>.
-2. Go to <https://www.netlify.com>, sign up (free), and click
-   **Add new site → Import an existing project**.
-3. Choose **GitHub** and pick this repository.
-4. Netlify reads the included `netlify.toml` file, so the build settings are
-   filled in automatically:
-   - **Build command:** `npm run build`
-   - **Publish directory:** `dist`
-5. Add your Sanity connection settings so the live site pulls real content.
-   In Netlify go to **Site settings → Environment variables** and add:
+  | Key | Value |
+  | --- | --- |
+  | `SANITY_PROJECT_ID` | your Sanity project ID (`7hpg0m0e`) |
+  | `SANITY_DATASET` | `production` |
+  | `PUBLIC_WEB3FORMS_ACCESS_KEY` | your Web3Forms key (for the contact form) |
 
-   | Key                         | Value                        |
-   | --------------------------- | ---------------------------- |
-   | `PUBLIC_SANITY_PROJECT_ID`  | your Sanity project ID       |
-   | `PUBLIC_SANITY_DATASET`     | `production`                 |
-   | `PUBLIC_SANITY_API_VERSION` | `2024-01-01`                 |
+### Two ways the live site updates
 
-   (You'll find the project ID at <https://www.sanity.io/manage>, or in the
-   `studio/.env` file created in Section 4.)
-6. Click **Deploy**. After a minute your site is live at a `*.netlify.app`
-   address.
-
-### Re-publishing after a content change
-
-Because the site is built ahead of time, it needs to rebuild to show new Sanity
-content. Two easy options:
-
-- **Simplest:** in Netlify, click **Deploys → Trigger deploy → Deploy site**
-  after you publish content in Sanity.
-- **Automatic:** in Netlify create a **Build hook** (Site settings → Build &
-  deploy → Build hooks), then in Sanity add that hook under **API → Webhooks** so
-  every content change rebuilds the site by itself.
+1. **Code changes** → automatic. When code is pushed to GitHub's `main` branch,
+   Cloudflare rebuilds and redeploys on its own.
+2. **Content changes in Sanity** → the site is built ahead of time, so it needs a
+   rebuild to show new content. Either:
+   - **Simplest:** in Cloudflare, open the project → **Create deployment / Retry**
+     to rebuild after publishing in Sanity, **or**
+   - **Automatic:** connect a Cloudflare **deploy hook** to a Sanity **webhook**
+     (see Part B6) so every publish rebuilds the site by itself.
 
 ### Connecting Sanity to the site locally
 
-To preview real Sanity content on your own computer, copy `.env.example` to `.env`
-and fill in the same three values as the table above, then run `npm run dev`.
+To preview real content on your own computer, copy `.env.example` to `.env`, fill
+in the values, then run `npm run dev`.
 
 ---
 
-## 9. How to connect a custom domain (e.g. www.your-group.ac.uk)
+## 9. How to connect a custom domain (e.g. energypower.cranfield.ac.uk)
 
-1. In Netlify, open your site and go to **Domain management → Add a domain**.
-2. Type the domain you want (for a Cranfield subdomain like
-   `energypower.cranfield.ac.uk`, ask Cranfield IT to point it to Netlify).
-3. Netlify shows the DNS records to set up:
-   - For a subdomain, add a **CNAME** record pointing to your Netlify address.
-   - For a root domain, follow Netlify's instructions (usually an **A record** or
-     using Netlify DNS).
-4. Whoever manages your domain's DNS (often the university IT team) enters those
-   records.
-5. Netlify automatically provides a free **HTTPS certificate** once the domain is
-   verified — no extra steps.
+1. Get a domain — either ask **Cranfield IT** for a `*.cranfield.ac.uk`
+   subdomain (free, most official), or buy one (cheapest via **Cloudflare
+   Registrar**, at wholesale price).
+2. In Cloudflare, open the project → **Settings → Domains & Routes → Add Domain**
+   and enter your domain.
+3. Cloudflare sets up the DNS and a **free HTTPS certificate automatically**. If
+   the domain was bought elsewhere, Cloudflare walks you through pointing that
+   registrar's DNS at Cloudflare (or ask Cranfield IT to add the record).
+4. The site then serves at your custom domain; the `*.workers.dev` address keeps
+   working as a backup. Nothing is rebuilt — it's the same site with a new name.
 
 ---
 
@@ -395,26 +383,23 @@ at the top-right, and you can see and restore earlier versions.
 ## B6. How the automatic rebuild works after you publish
 
 The public website is built in advance for speed, so after you **Publish** in
-Sanity it needs to **rebuild** to show the change. This is set up to happen
-**automatically within about a minute** using a "build hook". Here is how it is
-wired up (a one-time setup, described so you understand it — you don't repeat it):
+Sanity it needs to **rebuild** to show the change. This is wired up with a
+Cloudflare **deploy hook** connected to a Sanity **webhook** (a one-time setup,
+described so you understand it — you don't repeat it):
 
-**Step 1 — Get the rebuild link from Netlify (the host):**
-1. Log in at <https://app.netlify.com> and open the website's site.
-2. Go to **Site configuration → Build & deploy → Build hooks**.
-3. Click **Add build hook**, give it a name like *Sanity publish*, keep the
-   branch as **main**, and click **Save**.
-4. Netlify shows a web address that looks like
-   `https://api.netlify.com/build_hooks/abc123…`. Click **Copy**. Treat this
-   link like a password.
+**Step 1 — Get the rebuild link from Cloudflare (the host):**
+1. Log in at <https://dash.cloudflare.com> and open the project
+   (**Workers & Pages → `epg-cranfield-website`**).
+2. Go to **Settings** → find **Deploy hooks** (under the Build settings).
+3. Create a deploy hook, name it *Sanity publish*, branch **main**, and **Save**.
+4. Copy the URL it gives you. Treat this link like a password.
 
 **Step 2 — Paste it into Sanity so publishing triggers a rebuild:**
 1. Go to <https://www.sanity.io/manage> and open the project.
-2. Click the **API** tab, then scroll to **Webhooks**, and click
-   **Create webhook**.
+2. Click the **API** tab, scroll to **Webhooks**, and click **Create webhook**.
 3. Fill in:
    - **Name:** *Rebuild website on publish*
-   - **URL:** paste the Netlify link you copied.
+   - **URL:** paste the Cloudflare deploy-hook link you copied.
    - **Dataset:** `production`
    - **Trigger on:** tick **Create**, **Update** and **Delete**.
    - **HTTP method:** `POST`
@@ -422,15 +407,14 @@ wired up (a one-time setup, described so you understand it — you don't repeat 
 4. Click **Save**.
 
 **Step 3 — Test that it works:**
-1. In Sanity Studio, open any item (e.g. a Team Member), make a small change and
-   press **Publish**.
-2. Go to Netlify → the site's **Deploys** tab. Within a few seconds a **new
-   deploy** should appear that says it was triggered by a build hook.
+1. In Sanity Studio, change any item (e.g. a Team Member) and press **Publish**.
+2. In Cloudflare, open the project's **Deployments** — within a few seconds a
+   **new deployment** should start.
 3. Wait for it to finish (about a minute) and refresh the public website — your
    change is live.
 
-If nothing appears in **Deploys**, re-check that the Netlify link was pasted
-correctly into the Sanity webhook and that the trigger types are ticked.
+If nothing happens, re-check that the Cloudflare link was pasted correctly into
+the Sanity webhook and that the trigger types are ticked.
 
 ## B7. Annual maintenance checklist
 
@@ -439,13 +423,14 @@ calendar) check:
 
 - [ ] **Domain renewal** — if you use a custom web address (e.g.
       `energypower.cranfield.ac.uk`), make sure it is renewed/still pointing at
-      Netlify. University web addresses are usually handled by Cranfield IT —
+      Cloudflare. University web addresses are usually handled by Cranfield IT —
       confirm with them.
-- [ ] **Netlify free-tier limits** — log in at <https://app.netlify.com> once so
-      the free account stays active; check the site still says *Published*, builds
-      are succeeding, and you are within the free bandwidth/build-minute limits
-      (**Usage & billing** in Netlify). A small research-group site is nowhere near
-      these limits in normal use.
+- [ ] **Cloudflare account** — log in at <https://dash.cloudflare.com> once so the
+      free account stays active; check the project still deploys successfully. The
+      Cloudflare free tier is very generous and a small site stays well within it.
+- [ ] **Contact form (Web3Forms)** — check messages are still arriving. The free
+      Web3Forms plan is fine for normal enquiry volumes; the key is in the
+      `PUBLIC_WEB3FORMS_ACCESS_KEY` variable (locally and in Cloudflare).
 - [ ] **Sanity free-tier limits** — log in at <https://www.sanity.io/manage>;
       check **Usage** is within the free plan (users, API requests, bandwidth) and
       that the login/owner still belongs to someone in the group.
@@ -481,6 +466,6 @@ calendar) check:
 
 - **Astro docs:** <https://docs.astro.build>
 - **Sanity docs:** <https://www.sanity.io/docs>
-- **Netlify docs:** <https://docs.netlify.com>
+- **Cloudflare Workers/Pages docs:** <https://developers.cloudflare.com/pages/>
 
 For anything specific to this website, contact the group's web maintainer.

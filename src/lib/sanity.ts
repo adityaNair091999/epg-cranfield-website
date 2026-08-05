@@ -5,9 +5,9 @@ import imageUrlBuilder from '@sanity/image-url';
  * Sanity connection.
  *
  * Reads configuration from environment variables. To be robust across local
- * development and Netlify, we look each value up under several names and in both
+ * development and the host, we look each value up under several names and in both
  * Astro's `import.meta.env` (used locally, from the .env file) and `process.env`
- * (used by Netlify, which injects dashboard variables into the build process):
+ * (used by hosts like Cloudflare, which inject dashboard variables into the build):
  *
  *   Project ID : PUBLIC_SANITY_PROJECT_ID  or  SANITY_PROJECT_ID
  *   Dataset    : PUBLIC_SANITY_DATASET      or  SANITY_DATASET     (default: production)

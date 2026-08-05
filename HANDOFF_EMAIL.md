@@ -26,7 +26,7 @@ on). Click any item to edit it or the “+” button to add a new one, fill in t
 form, and click **Publish**. The public website updates itself automatically
 within about a minute — there's nothing else you need to do.
 
-On the practical side: the hosting is completely **free** (it runs on Netlify's
+On the practical side: the hosting is completely **free** (it runs on Cloudflare's
 and Sanity's free plans, which are more than enough for a research group), and it
 requires **no action or maintenance on your part**. If anything ever looks wrong
 or you'd like a change, just email me and I'll sort it out.

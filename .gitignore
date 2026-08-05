@@ -26,5 +26,5 @@ npm-debug.log*
 .vscode/
 .idea/
 
-# netlify
-.netlify/
+# cloudflare / wrangler
+.wrangler/

@@ -1,9 +1,9 @@
 import { defineConfig } from 'astro/config';
 
-// Static site output — Netlify serves the generated `dist/` folder.
-// If/when you connect a live Sanity project, content is fetched at build time.
+// Static site output — the host (Cloudflare) serves the generated `dist/` folder.
+// Content is fetched from Sanity at build time.
 export default defineConfig({
-  site: 'https://energy-power-group.netlify.app',
+  site: 'https://epg-cranfield-website.aditya-nair2-817.workers.dev',
   output: 'static',
   trailingSlash: 'ignore',
   build: {

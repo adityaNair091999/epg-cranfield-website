@@ -10,6 +10,22 @@ run, edit and publish the website. Follow the steps in order.
 
 ---
 
+## Live site & key links
+
+| What | Address |
+| --- | --- |
+| **Live website** | https://sage-muffin-be16e2.netlify.app |
+| **Content editor (Sanity Studio)** | https://energy-power-cranfield.sanity.studio |
+| **Manage content account** | https://www.sanity.io/manage |
+| **Hosting dashboard (Netlify)** | https://app.netlify.com |
+| **Source code (GitHub)** | https://github.com/adityaNair091999/epg-cranfield-website |
+| **Developer contact** | Aditya Nair — aditya.nair.817@cranfield.ac.uk |
+
+**How editing works, in one line:** open the Sanity Studio → change something →
+click **Publish** → the website updates automatically within about a minute.
+
+---
+
 ## 1. Project overview
 
 The website has seven pages: **Home, Research, Publications, Members, News,
@@ -409,12 +425,18 @@ calendar) check:
       `energypower.cranfield.ac.uk`), make sure it is renewed/still pointing at
       Netlify. University web addresses are usually handled by Cranfield IT —
       confirm with them.
-- [ ] **Netlify account** — log in at <https://app.netlify.com> once so the free
-      account stays active; check the site still says *Published* and builds are
-      succeeding.
-- [ ] **Sanity account** — log in at <https://www.sanity.io/manage>; the free
-      plan is generous, but check you are within limits and that the login used
-      to create it still belongs to someone in the group.
+- [ ] **Netlify free-tier limits** — log in at <https://app.netlify.com> once so
+      the free account stays active; check the site still says *Published*, builds
+      are succeeding, and you are within the free bandwidth/build-minute limits
+      (**Usage & billing** in Netlify). A small research-group site is nowhere near
+      these limits in normal use.
+- [ ] **Sanity free-tier limits** — log in at <https://www.sanity.io/manage>;
+      check **Usage** is within the free plan (users, API requests, bandwidth) and
+      that the login/owner still belongs to someone in the group.
+- [ ] **GitHub repo stays active** — GitHub may flag a repository as inactive
+      after a long idle period. If there have been no updates for ~11 months, push
+      any tiny change (even editing this README) to keep it active. The repo is at
+      <https://github.com/adityaNair091999/epg-cranfield-website>.
 - [ ] **Content review** — remove out-of-date opportunities, move departed staff
       to *Alumni* (toggle *Current member?* off), and add the year's new
       publications and news.

@@ -14,10 +14,10 @@ run, edit and publish the website. Follow the steps in order.
 
 | What | Address |
 | --- | --- |
-| **Live website** | https://sage-muffin-be16e2.netlify.app |
+| **Live website** | https://epg-cranfield-website.aditya-nair2-817.workers.dev |
 | **Content editor (Sanity Studio)** | https://energy-power-cranfield.sanity.studio |
 | **Manage content account** | https://www.sanity.io/manage |
-| **Hosting dashboard (Netlify)** | https://app.netlify.com |
+| **Hosting dashboard (Cloudflare)** | https://dash.cloudflare.com → Workers & Pages → `epg-cranfield-website` |
 | **Source code (GitHub)** | https://github.com/adityaNair091999/epg-cranfield-website |
 | **Developer contact** | Aditya Nair — aditya.nair.817@cranfield.ac.uk |
 

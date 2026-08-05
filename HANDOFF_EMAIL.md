@@ -11,7 +11,7 @@ Dear Dr. Huang,
 I'm pleased to share that the new website for the Energy and Power Group is now
 live:
 
-**https://sage-muffin-be16e2.netlify.app**
+**https://epg-cranfield-website.aditya-nair2-817.workers.dev**
 
 You can edit everything on it yourself — no coding, and nothing to install. All
 the content (team members, publications, projects, news and opportunities) is

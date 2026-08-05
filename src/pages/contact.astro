@@ -12,6 +12,11 @@ const email = settings.email || 'luofeng.huang@cranfield.ac.uk';
 const leadName = settings.groupLeadName || 'Dr. Luofeng Huang';
 const leadRole = settings.groupLeadRole || 'Lecturer in Offshore Renewable Energy';
 const mapUrl = settings.mapEmbedUrl || 'https://www.openstreetmap.org/export/embed.html?bbox=-0.6620%2C52.0560%2C-0.5960%2C52.0870&layer=mapnik&marker=52.0716%2C-0.6286';
+
+// Web3Forms handles the contact form (works on any host). Get a free access key
+// at https://web3forms.com and set PUBLIC_WEB3FORMS_ACCESS_KEY. If it's not set,
+// the page shows an email link instead of the form.
+const web3key = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
 ---
 
 <Base title="Contact — Energy and Power Group">
@@ -56,34 +61,39 @@ const mapUrl = settings.mapEmbedUrl || 'https://www.openstreetmap.org/export/emb
       <!-- RIGHT: form -->
       <div class="contact__form-wrap">
         <h3>Send a message</h3>
-        <p class="muted contact__form-note">
-          This form is powered by Netlify Forms and works once the site is deployed to Netlify.
-        </p>
-        <!-- Netlify picks up forms via the data-netlify attribute at build time. -->
-        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/contact/">
-          <input type="hidden" name="form-name" value="contact" />
-          <p class="hidden-field">
-            <label>Don’t fill this out: <input name="bot-field" /></label>
-          </p>
+        {web3key ? (
+          <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value={web3key} />
+            <input type="hidden" name="subject" value="New message from the EPG website" />
+            <input type="hidden" name="from_name" value="EPG Website" />
+            <!-- honeypot (spam trap) -->
+            <input type="checkbox" name="botcheck" class="hidden-field" tabindex="-1" autocomplete="off" />
 
-          <div class="field">
-            <label for="name">Name</label>
-            <input id="name" name="name" type="text" required />
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" required />
-          </div>
-          <div class="field">
-            <label for="subject">Subject</label>
-            <input id="subject" name="subject" type="text" />
-          </div>
-          <div class="field">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="6" required></textarea>
-          </div>
-          <button type="submit" class="btn btn--accent">Send message <Icon name="arrow" size={18} /></button>
-        </form>
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required />
+            </div>
+            <div class="field">
+              <label for="subject-line">Subject</label>
+              <input id="subject-line" name="subject_line" type="text" />
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="6" required></textarea>
+            </div>
+            <button type="submit" class="btn btn--accent">Send message <Icon name="arrow" size={18} /></button>
+            <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+          </form>
+        ) : (
+          <p class="muted contact__form-note">
+            The contact form isn't configured yet. In the meantime, email us at
+            <a href={`mailto:${email}`}> {email}</a>.
+          </p>
+        )}
       </div>
     </div>
   </section>
@@ -110,6 +120,40 @@ const mapUrl = settings.mapEmbedUrl || 'https://www.openstreetmap.org/export/emb
   }
   .field input:focus, .field textarea:focus { outline: 2px solid var(--accent); border-color: var(--accent); background: var(--white); }
   .hidden-field { display: none; }
+  .form-status { margin: 1rem 0 0; font-size: 0.95rem; }
+  .form-status.is-ok { color: #1f7a3d; }
+  .form-status.is-err { color: var(--accent-deep); }
 
   @media (max-width: 820px) { .contact { grid-template-columns: 1fr; gap: 2.2rem; } }
 </style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+  if (form && status) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      status.className = 'form-status';
+      status.textContent = 'Sending…';
+      if (btn) btn.disabled = true;
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+        const data = await res.json();
+        if (data.success) {
+          form.reset();
+          status.textContent = 'Thanks — your message has been sent.';
+          status.classList.add('is-ok');
+        } else {
+          status.textContent = data.message || 'Something went wrong. Please email us instead.';
+          status.classList.add('is-err');
+        }
+      } catch {
+        status.textContent = 'Network error. Please email us instead.';
+        status.classList.add('is-err');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+</script>

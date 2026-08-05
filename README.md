@@ -370,6 +370,22 @@ Opportunities, Contact) on or off yourself — no code needed:
 Within about a minute the website rebuilds and the menu updates. (The Home page /
 logo is always shown.)
 
+## B4c. Editing the home page, headings, footer and brand
+
+Almost everything you see is now editable from the Studio — no code. At the top of
+the left-hand list you'll find three settings areas:
+
+- **Home Page** — the big banner headline, tagline, buttons, and the hero
+  image/**video** (upload your installed-FPV footage here and it plays in the
+  banner), plus the section headings on the home page.
+- **Site Settings** — the group name and logo text, the footer address, email,
+  phone and group-lead details, the map location, and the menu-tab switches.
+- **Page Banners** — the title and intro text at the top of each page (Research,
+  Publications, Members, News, Opportunities, Contact).
+
+Edit any field and click **Publish**; the site updates within about a minute. Any
+field left blank falls back to a sensible default, so you can't break the layout.
+
 ## B5. Changing your mind / undo
 
 Every change is only live after you press **Publish**. If you make a mistake,

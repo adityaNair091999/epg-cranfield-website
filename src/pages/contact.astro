@@ -2,13 +2,23 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
+import { getSiteSettings, getPageBanners } from '../lib/content';
+
+const [settings, banners] = await Promise.all([getSiteSettings(), getPageBanners()]);
+const addressLines = settings.addressLines?.length
+  ? settings.addressLines
+  : ['Cranfield University', 'College Road, Cranfield', 'Bedfordshire, MK43 0AL', 'United Kingdom'];
+const email = settings.email || 'luofeng.huang@cranfield.ac.uk';
+const leadName = settings.groupLeadName || 'Dr. Luofeng Huang';
+const leadRole = settings.groupLeadRole || 'Lecturer in Offshore Renewable Energy';
+const mapUrl = settings.mapEmbedUrl || 'https://www.openstreetmap.org/export/embed.html?bbox=-0.6620%2C52.0560%2C-0.5960%2C52.0870&layer=mapnik&marker=52.0716%2C-0.6286';
 ---
 
 <Base title="Contact — Energy and Power Group">
   <PageHero
-    eyebrow="Get in Touch"
-    title="Contact"
-    intro="Questions about our research, collaboration or joining the group? Reach out — we are based at Cranfield University."
+    eyebrow={banners.contactEyebrow || 'Get in Touch'}
+    title={banners.contactTitle || 'Contact'}
+    intro={banners.contactIntro || 'Questions about our research, collaboration or joining the group? Reach out — we are based at Cranfield University.'}
   />
 
   <section class="section">
@@ -17,30 +27,23 @@ import Icon from '../components/Icon.astro';
       <div class="contact__info">
         <div class="contact__block">
           <h3>Address</h3>
-          <p class="mono">
-            Energy and Power Group<br />
-            School of Water, Energy and Environment<br />
-            Cranfield University<br />
-            College Road, Cranfield<br />
-            Bedfordshire, MK43 0AL<br />
-            United Kingdom
-          </p>
+          <p class="mono" set:html={addressLines.join('<br />')}></p>
         </div>
         <div class="contact__block">
           <h3>Email</h3>
-          <a href="mailto:luofeng.huang@cranfield.ac.uk" class="contact__email">
-            <Icon name="mail" size={18} /> luofeng.huang@cranfield.ac.uk
+          <a href={`mailto:${email}`} class="contact__email">
+            <Icon name="mail" size={18} /> {email}
           </a>
         </div>
         <div class="contact__block">
           <h3>Group Lead</h3>
-          <p>Dr. Luofeng Huang<br /><span class="muted">Lecturer in Offshore Renewable Energy</span></p>
+          <p>{leadName}<br /><span class="muted">{leadRole}</span></p>
         </div>
 
         <div class="contact__map">
           <iframe
             title="Map of Cranfield University"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=-0.6620%2C52.0560%2C-0.5960%2C52.0870&layer=mapnik&marker=52.0716%2C-0.6286"
+            src={mapUrl}
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
           ></iframe>

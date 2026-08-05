@@ -46,5 +46,19 @@ export const opportunitiesQuery = `*[_type == "opportunity"] | order(open desc, 
 }`;
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
+  groupName, groupShortName, university, navCtaLabel, navCtaLink,
+  addressLines, email, phone, groupLeadName, groupLeadRole, charityLine, mapEmbedUrl,
   showResearch, showPublications, showMembers, showNews, showOpportunities, showContact
 }`;
+
+export const homePageQuery = `*[_type == "homePage"][0]{
+  heroEyebrow, heroHeading, heroTagline,
+  heroPrimaryLabel, heroPrimaryLink, heroSecondaryLabel, heroSecondaryLink,
+  heroCaption,
+  "heroImageUrl": heroImage.asset->url,
+  "heroVideoUrl": heroVideo.asset->url,
+  researchEyebrow, researchTitle, newsEyebrow, newsTitle,
+  publicationsEyebrow, publicationsTitle, teamEyebrow, teamTitle
+}`;
+
+export const pageBannersQuery = `*[_type == "pageBanners"][0]`;

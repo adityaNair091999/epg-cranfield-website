@@ -63,6 +63,21 @@ export interface NewsPost {
 }
 
 export interface SiteSettings {
+  // brand
+  groupName?: string;
+  groupShortName?: string;
+  university?: string;
+  navCtaLabel?: string;
+  navCtaLink?: string;
+  // contact / footer
+  addressLines?: string[];
+  email?: string;
+  phone?: string;
+  groupLeadName?: string;
+  groupLeadRole?: string;
+  charityLine?: string;
+  mapEmbedUrl?: string;
+  // menu toggles
   showResearch?: boolean;
   showPublications?: boolean;
   showMembers?: boolean;
@@ -70,6 +85,30 @@ export interface SiteSettings {
   showOpportunities?: boolean;
   showContact?: boolean;
 }
+
+export interface HomePage {
+  heroEyebrow?: string;
+  heroHeading?: string;
+  heroTagline?: string;
+  heroPrimaryLabel?: string;
+  heroPrimaryLink?: string;
+  heroSecondaryLabel?: string;
+  heroSecondaryLink?: string;
+  heroImageUrl?: string;
+  heroVideoUrl?: string;
+  heroCaption?: string;
+  researchEyebrow?: string;
+  researchTitle?: string;
+  newsEyebrow?: string;
+  newsTitle?: string;
+  publicationsEyebrow?: string;
+  publicationsTitle?: string;
+  teamEyebrow?: string;
+  teamTitle?: string;
+}
+
+/** Per-page banner text; keys like researchTitle, researchIntro, researchEyebrow. */
+export type PageBanners = Record<string, string | undefined>;
 
 export interface Opportunity {
   _id: string;

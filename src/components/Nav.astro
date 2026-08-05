@@ -4,7 +4,8 @@ import { getSiteSettings } from '../lib/content';
 
 // Menu tabs — each can be hidden from Sanity's "Site Settings" (a value of
 // exactly false hides it; anything else shows it).
-const settings = (await getSiteSettings()) as Record<string, boolean | undefined>;
+const settings = await getSiteSettings();
+const toggles = settings as Record<string, boolean | undefined>;
 const allLinks = [
   { href: '/research', label: 'Research', key: 'showResearch' },
   { href: '/publications', label: 'Publications', key: 'showPublications' },
@@ -13,8 +14,14 @@ const allLinks = [
   { href: '/opportunities', label: 'Opportunities', key: 'showOpportunities' },
   { href: '/contact', label: 'Contact', key: 'showContact' },
 ];
-const links = allLinks.filter((l) => settings[l.key] !== false);
+const links = allLinks.filter((l) => toggles[l.key] !== false);
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const groupName = settings.groupName || 'Energy and Power Group';
+const shortName = settings.groupShortName || 'EPG';
+const university = settings.university || 'Cranfield University';
+const ctaLabel = settings.navCtaLabel || 'Explore Our Research';
+const ctaLink = settings.navCtaLink || '/research';
 ---
 
 <header class="nav">
@@ -22,11 +29,11 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     <a class="nav__brand" href="/">
       <span class="nav__mark blueprint">
         <Corners />
-        EPG
+        {shortName}
       </span>
       <span class="nav__name">
-        Energy &amp; Power Group
-        <small>Cranfield University</small>
+        {groupName}
+        <small>{university}</small>
       </span>
     </a>
 
@@ -36,7 +43,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
       ))}
     </nav>
 
-    <a href="/research" class="nav__cta">Explore Our Research</a>
+    <a href={ctaLink} class="nav__cta">{ctaLabel}</a>
 
     <button class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <span></span><span></span><span></span>

@@ -2,18 +2,18 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { getProjects } from '../lib/content';
+import { getProjects, getPageBanners } from '../lib/content';
 
-const projects = await getProjects();
+const [projects, banners] = await Promise.all([getProjects(), getPageBanners()]);
 const ongoing = projects.filter((p) => p.status === 'ongoing');
 const completed = projects.filter((p) => p.status === 'completed');
 ---
 
 <Base title="Research — Energy and Power Group">
   <PageHero
-    eyebrow="Research"
-    title="Research Projects"
-    intro="Our work spans floating photovoltaics, wave–structure interaction and computational fluid dynamics — combining high-fidelity simulation with experimental validation."
+    eyebrow={banners.researchEyebrow || 'Research'}
+    title={banners.researchTitle || 'Research Projects'}
+    intro={banners.researchIntro || 'Our work spans floating photovoltaics, wave–structure interaction and computational fluid dynamics — combining high-fidelity simulation with experimental validation.'}
   />
 
   <section class="section">

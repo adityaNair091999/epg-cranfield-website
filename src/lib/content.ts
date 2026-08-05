@@ -16,6 +16,8 @@ import {
   newsPostQuery,
   opportunitiesQuery,
   siteSettingsQuery,
+  homePageQuery,
+  pageBannersQuery,
 } from './queries';
 import {
   sampleMembers,
@@ -31,6 +33,8 @@ import type {
   NewsPost,
   Opportunity,
   SiteSettings,
+  HomePage,
+  PageBanners,
 } from './types';
 
 /**
@@ -69,6 +73,28 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   if (!isSanityConfigured || !sanityClient) return {};
   try {
     return (await sanityClient.fetch<SiteSettings | null>(siteSettingsQuery)) ?? {};
+  } catch (err) {
+    console.warn('[content] Sanity fetch failed, using defaults:', err);
+    return {};
+  }
+}
+
+/** Home page content (hero + section headings). Returns {} as a safe default. */
+export async function getHomePage(): Promise<HomePage> {
+  if (!isSanityConfigured || !sanityClient) return {};
+  try {
+    return (await sanityClient.fetch<HomePage | null>(homePageQuery)) ?? {};
+  } catch (err) {
+    console.warn('[content] Sanity fetch failed, using defaults:', err);
+    return {};
+  }
+}
+
+/** Interior page banner text. Returns {} as a safe default. */
+export async function getPageBanners(): Promise<PageBanners> {
+  if (!isSanityConfigured || !sanityClient) return {};
+  try {
+    return (await sanityClient.fetch<PageBanners | null>(pageBannersQuery)) ?? {};
   } catch (err) {
     console.warn('[content] Sanity fetch failed, using defaults:', err);
     return {};

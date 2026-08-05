@@ -2,7 +2,8 @@
 import { getSiteSettings } from '../lib/content';
 const year = new Date().getFullYear();
 
-const settings = (await getSiteSettings()) as Record<string, boolean | undefined>;
+const settings = await getSiteSettings();
+const toggles = settings as Record<string, boolean | undefined>;
 const allLinks = [
   { href: '/research', label: 'Research', key: 'showResearch' },
   { href: '/publications', label: 'Publications', key: 'showPublications' },
@@ -10,17 +11,26 @@ const allLinks = [
   { href: '/news', label: 'News', key: 'showNews' },
   { href: '/opportunities', label: 'Opportunities', key: 'showOpportunities' },
 ];
-const links = allLinks.filter((l) => settings[l.key] !== false);
+const links = allLinks.filter((l) => toggles[l.key] !== false);
+
+const groupName = settings.groupName || 'Energy and Power Group';
+const university = settings.university || 'Cranfield University';
+const addressLines = settings.addressLines?.length
+  ? settings.addressLines
+  : ['Cranfield University', 'College Road, Cranfield', 'Bedford, MK43 0AL, United Kingdom'];
+const email = settings.email || 'luofeng.huang@cranfield.ac.uk';
+const phone = settings.phone || '+44 (0)1234 750111';
+const leadName = settings.groupLeadName || 'Dr. Luofeng Huang';
+const leadRole = settings.groupLeadRole || 'Lecturer in Offshore Renewable Energy';
+const charityLine = settings.charityLine || 'Cranfield University is a registered charity';
 ---
 
 <footer class="footer">
   <div class="container">
     <div class="footer__grid">
       <div>
-        <div class="footer__title">Energy and Power Group</div>
-        <p class="footer__addr">
-          Cranfield University<br />College Road, Cranfield<br />Bedford, MK43 0AL, United Kingdom
-        </p>
+        <div class="footer__title">{groupName}</div>
+        <p class="footer__addr" set:html={addressLines.join('<br />')}></p>
       </div>
 
       <div>
@@ -33,24 +43,24 @@ const links = allLinks.filter((l) => settings[l.key] !== false);
       <div>
         <div class="footer__label">Contact</div>
         <div class="footer__links">
-          <a href="mailto:luofeng.huang@cranfield.ac.uk">luofeng.huang@cranfield.ac.uk</a>
-          <span>+44 (0)1234 750111</span>
+          <a href={`mailto:${email}`}>{email}</a>
+          <span>{phone}</span>
         </div>
       </div>
 
       <div>
         <div class="footer__label">Group Lead</div>
         <div class="footer__links">
-          <span>Dr. Luofeng Huang</span>
-          <span class="footer__dim">Lecturer in Offshore Renewable Energy</span>
+          <span>{leadName}</span>
+          <span class="footer__dim">{leadRole}</span>
           <a href="/contact">Get in touch &rarr;</a>
         </div>
       </div>
     </div>
 
     <div class="footer__bar">
-      <span>&copy; {year} Energy and Power Group, Cranfield University</span>
-      <span>Cranfield University is a registered charity</span>
+      <span>&copy; {year} {groupName}, {university}</span>
+      <span>{charityLine}</span>
     </div>
   </div>
 </footer>

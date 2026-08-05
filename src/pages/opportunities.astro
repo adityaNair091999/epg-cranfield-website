@@ -3,9 +3,9 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import PortableText from '../components/PortableText.astro';
 import Icon from '../components/Icon.astro';
-import { getOpportunities } from '../lib/content';
+import { getOpportunities, getPageBanners } from '../lib/content';
 
-const opps = await getOpportunities();
+const [opps, banners] = await Promise.all([getOpportunities(), getPageBanners()]);
 const open = opps.filter((o) => o.open);
 const closed = opps.filter((o) => !o.open);
 
@@ -17,9 +17,9 @@ function fmtDeadline(d?: string) {
 
 <Base title="Opportunities — Energy and Power Group">
   <PageHero
-    eyebrow="Join Us"
-    title="Opportunities"
-    intro="Open PhD studentships, postdoctoral positions and other opportunities to join the Energy and Power Group."
+    eyebrow={banners.opportunitiesEyebrow || 'Join Us'}
+    title={banners.opportunitiesTitle || 'Opportunities'}
+    intro={banners.opportunitiesIntro || 'Open PhD studentships, postdoctoral positions and other opportunities to join the Energy and Power Group.'}
   />
 
   <section class="section">

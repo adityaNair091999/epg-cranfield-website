@@ -2,16 +2,16 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import NewsCard from '../components/NewsCard.astro';
-import { getNews } from '../lib/content';
+import { getNews, getPageBanners } from '../lib/content';
 
-const news = await getNews();
+const [news, banners] = await Promise.all([getNews(), getPageBanners()]);
 ---
 
 <Base title="News — Energy and Power Group">
   <PageHero
-    eyebrow="News"
-    title="News &amp; Updates"
-    intro="Announcements, publications, events and milestones from the Energy and Power Group."
+    eyebrow={banners.newsEyebrow || 'News'}
+    title={banners.newsTitle || 'News & Updates'}
+    intro={banners.newsIntro || 'Announcements, publications, events and milestones from the Energy and Power Group.'}
   />
 
   <section class="section">

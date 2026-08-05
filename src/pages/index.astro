@@ -2,14 +2,39 @@
 import Base from '../layouts/Base.astro';
 import Corners from '../components/Corners.astro';
 import Icon from '../components/Icon.astro';
-import { getRecentNews, getFeaturedPublications, getMembers, getFeaturedProjects } from '../lib/content';
+import { getRecentNews, getFeaturedPublications, getMembers, getFeaturedProjects, getHomePage } from '../lib/content';
 
-const [news, pubs, allMembers, projects] = await Promise.all([
+const [news, pubs, allMembers, projects, home] = await Promise.all([
   getRecentNews(),
   getFeaturedPublications(),
   getMembers(),
   getFeaturedProjects(),
+  getHomePage(),
 ]);
+
+// Hero + section headings (editable in Sanity → "Home Page"), with fallbacks.
+const hero = {
+  eyebrow: home.heroEyebrow || 'Faculty of Engineering and Applied Sciences',
+  heading: home.heroHeading || 'Marine and AI systems',
+  tagline: home.heroTagline || 'Engineering the offshore energy systems of the next century.',
+  primaryLabel: home.heroPrimaryLabel || 'Explore Our Research',
+  primaryLink: home.heroPrimaryLink || '/research',
+  secondaryLabel: home.heroSecondaryLabel || 'View Publications',
+  secondaryLink: home.heroSecondaryLink || '/publications',
+  imageUrl: home.heroImageUrl || '/samples/hero-fpv.svg',
+  videoUrl: home.heroVideoUrl || '',
+  caption: home.heroCaption || 'Installed FPV platform · field footage',
+};
+const heads = {
+  researchEyebrow: home.researchEyebrow || 'What We Do',
+  researchTitle: home.researchTitle || 'Research Highlights',
+  newsEyebrow: home.newsEyebrow || 'News',
+  newsTitle: home.newsTitle || 'Latest News',
+  publicationsEyebrow: home.publicationsEyebrow || 'Publications',
+  publicationsTitle: home.publicationsTitle || 'Featured Publications',
+  teamEyebrow: home.teamEyebrow || 'People',
+  teamTitle: home.teamTitle || 'Meet the Team',
+};
 
 // Team preview: current members only.
 const members = allMembers.filter((m) => m.current);
@@ -45,31 +70,29 @@ const excerpt = (post: (typeof news)[number]) =>
       <div class="hero__grid-bg" aria-hidden="true"></div>
 
       <div class="hero__text">
-        <span class="hero__eyebrow">Faculty of Engineering and Applied Sciences</span>
-        <h1 class="hero__title">Marine and AI systems</h1>
-        <p class="hero__tag">Engineering the offshore energy systems of the next century.</p>
+        <span class="hero__eyebrow">{hero.eyebrow}</span>
+        <h1 class="hero__title">{hero.heading}</h1>
+        <p class="hero__tag">{hero.tagline}</p>
         <div class="hero__cta">
-          <a href="/research" class="btn">
-            Explore Our Research
+          <a href={hero.primaryLink} class="btn">
+            {hero.primaryLabel}
             <Icon name="arrow" size={16} />
           </a>
-          <a href="/publications" class="btn btn--plain">View Publications</a>
+          <a href={hero.secondaryLink} class="btn btn--plain">{hero.secondaryLabel}</a>
         </div>
       </div>
 
-      <!-- Hero figure. VIDEO SLOT: replace the <img> below with:
-           <video autoplay muted loop playsinline poster="/samples/hero-fpv.svg">
-             <source src="/media/fpv-field.webm" type="video/webm" />
-             <source src="/media/fpv-field.mp4" type="video/mp4" />
-           </video>
-           Drop the FPV footage into public/media/ and it will be duotoned automatically. -->
+      <!-- Hero figure. Upload a video in Sanity → Home Page → Hero video and it
+           plays here (duotoned) instead of the image. -->
       <figure class="hero__figure blueprint">
         <Corners />
         <div class="duotone hero__media">
-          <img src="/samples/hero-fpv.svg" alt="Installed floating photovoltaic platform (placeholder for field footage)" />
+          {hero.videoUrl
+            ? <video src={hero.videoUrl} autoplay muted loop playsinline poster={hero.imageUrl}></video>
+            : <img src={hero.imageUrl} alt={hero.caption} />}
         </div>
         <figcaption class="hero__caption">
-          <span class="mono">FIG 01</span> Installed FPV platform · field footage
+          <span class="mono">FIG 01</span> {hero.caption}
         </figcaption>
       </figure>
     </div>
@@ -79,8 +102,8 @@ const excerpt = (post: (typeof news)[number]) =>
   <section id="research" class="section">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">What We Do</span>
-        <h2>Research Highlights</h2>
+        <span class="eyebrow">{heads.researchEyebrow}</span>
+        <h2>{heads.researchTitle}</h2>
       </div>
 
       <div class="grid grid-3 research__cards">
@@ -114,8 +137,8 @@ const excerpt = (post: (typeof news)[number]) =>
   <section id="news" class="section section--top0">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">News</span>
-        <h2>Latest News</h2>
+        <span class="eyebrow">{heads.newsEyebrow}</span>
+        <h2>{heads.newsTitle}</h2>
       </div>
 
       <div class="grid grid-3">
@@ -140,8 +163,8 @@ const excerpt = (post: (typeof news)[number]) =>
     <div class="container">
       <div class="section-head pub-head">
         <div>
-          <span class="eyebrow">Publications</span>
-          <h2>Featured Publications</h2>
+          <span class="eyebrow">{heads.publicationsEyebrow}</span>
+          <h2>{heads.publicationsTitle}</h2>
         </div>
         <a href="/publications" class="btn btn--ghost">All publications <Icon name="arrow" size={15} /></a>
       </div>
@@ -169,8 +192,8 @@ const excerpt = (post: (typeof news)[number]) =>
     <div class="container">
       <div class="section-head pub-head">
         <div>
-          <span class="eyebrow">People</span>
-          <h2>Meet the Team</h2>
+          <span class="eyebrow">{heads.teamEyebrow}</span>
+          <h2>{heads.teamTitle}</h2>
         </div>
         <a href="/members" class="btn btn--ghost">All members <Icon name="arrow" size={15} /></a>
       </div>

@@ -4,7 +4,7 @@ import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './schemaTypes';
 
 // "Site Settings" is a singleton: exactly one document, not a list you add to.
-const SINGLETON_TYPES = new Set(['siteSettings']);
+const SINGLETON_TYPES = new Set(['siteSettings', 'homePage', 'pageBanners']);
 const SINGLETON_ACTIONS = new Set(['publish', 'discardChanges', 'restore']);
 
 // The project ID and dataset come from environment variables. See studio/.env.
@@ -21,15 +21,15 @@ export default defineConfig({
         S.list()
           .title('Content')
           .items([
-            // Singleton pinned at the top
-            S.listItem()
-              .title('Site Settings')
-              .id('siteSettings')
-              .child(
-                S.document().schemaType('siteSettings').documentId('siteSettings')
-              ),
+            // Singletons pinned at the top
+            S.listItem().title('Site Settings').id('siteSettings')
+              .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
+            S.listItem().title('Home Page').id('homePage')
+              .child(S.document().schemaType('homePage').documentId('homePage')),
+            S.listItem().title('Page Banners').id('pageBanners')
+              .child(S.document().schemaType('pageBanners').documentId('pageBanners')),
             S.divider(),
-            // Everything else as normal, minus the singleton
+            // Everything else as normal, minus the singletons
             ...S.documentTypeListItems().filter(
               (item) => !SINGLETON_TYPES.has(item.getId() ?? '')
             ),

@@ -2,18 +2,18 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import MemberCard from '../components/MemberCard.astro';
-import { getMembers } from '../lib/content';
+import { getMembers, getPageBanners } from '../lib/content';
 
-const members = await getMembers();
+const [members, banners] = await Promise.all([getMembers(), getPageBanners()]);
 const current = members.filter((m) => m.current);
 const alumni = members.filter((m) => !m.current);
 ---
 
 <Base title="Members — Energy and Power Group">
   <PageHero
-    eyebrow="People"
-    title="Members"
-    intro="The researchers, students and staff driving our offshore renewable energy work."
+    eyebrow={banners.membersEyebrow || 'People'}
+    title={banners.membersTitle || 'Members'}
+    intro={banners.membersIntro || 'The researchers, students and staff driving our offshore renewable energy work.'}
   />
 
   <section class="section">

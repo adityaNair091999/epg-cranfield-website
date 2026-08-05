@@ -38,18 +38,22 @@ import type {
 } from './types';
 
 /**
- * Fetch from Sanity if configured; otherwise return the sample fallback.
- * If a live fetch returns nothing (empty dataset), the sample is used so the
- * page never looks broken.
+ * Fetch content.
+ *
+ * - When a Sanity project is connected, return exactly what Sanity has —
+ *   including an empty list. (We do NOT fill empty sections with placeholder
+ *   sample content on a live site; that would show papers/people that don't
+ *   belong to the group.)
+ * - When no Sanity project is configured (local design preview), return the
+ *   built-in sample content so the layout can be seen.
  */
 async function load<T>(query: string, sample: T[], params?: Record<string, unknown>): Promise<T[]> {
   if (!isSanityConfigured || !sanityClient) return sample;
   try {
-    const result = await sanityClient.fetch<T[]>(query, params ?? {});
-    return result && result.length > 0 ? result : sample;
+    return (await sanityClient.fetch<T[]>(query, params ?? {})) ?? [];
   } catch (err) {
-    console.warn('[content] Sanity fetch failed, using sample content:', err);
-    return sample;
+    console.warn('[content] Sanity fetch failed:', err);
+    return [];
   }
 }
 
@@ -107,10 +111,9 @@ export async function getNewsPost(slug: string): Promise<NewsPost | null> {
     return sampleNews.find((n) => n.slug === slug) ?? null;
   }
   try {
-    const post = await sanityClient.fetch<NewsPost | null>(newsPostQuery, { slug });
-    return post ?? sampleNews.find((n) => n.slug === slug) ?? null;
+    return (await sanityClient.fetch<NewsPost | null>(newsPostQuery, { slug })) ?? null;
   } catch (err) {
-    console.warn('[content] Sanity fetch failed, using sample content:', err);
-    return sampleNews.find((n) => n.slug === slug) ?? null;
+    console.warn('[content] Sanity fetch failed:', err);
+    return null;
   }
 }

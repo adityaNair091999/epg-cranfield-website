@@ -99,6 +99,7 @@ const excerpt = (post: (typeof news)[number]) =>
   </section>
 
   <!-- ==================== RESEARCH HIGHLIGHTS ==================== -->
+  {research.length > 0 && (
   <section id="research" class="section">
     <div class="container">
       <div class="section-head">
@@ -132,8 +133,10 @@ const excerpt = (post: (typeof news)[number]) =>
       </div>
     </div>
   </section>
+  )}
 
   <!-- ======================== LATEST NEWS ======================== -->
+  {news.length > 0 && (
   <section id="news" class="section section--top0">
     <div class="container">
       <div class="section-head">
@@ -157,8 +160,10 @@ const excerpt = (post: (typeof news)[number]) =>
       </div>
     </div>
   </section>
+  )}
 
   <!-- =================== FEATURED PUBLICATIONS =================== -->
+  {pubs.length > 0 && (
   <section id="publications" class="section section--top0">
     <div class="container">
       <div class="section-head pub-head">
@@ -186,8 +191,10 @@ const excerpt = (post: (typeof news)[number]) =>
       </div>
     </div>
   </section>
+  )}
 
   <!-- ========================= MEET THE TEAM ===================== -->
+  {members.length > 0 && (
   <section id="team" class="section section--top0">
     <div class="container">
       <div class="section-head pub-head">
@@ -216,6 +223,7 @@ const excerpt = (post: (typeof news)[number]) =>
       </div>
     </div>
   </section>
+  )}
 </Base>
 
 <script define:vars={{ research }}>

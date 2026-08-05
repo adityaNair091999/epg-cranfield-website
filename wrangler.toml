@@ -1,0 +1,7 @@
+# Cloudflare deployment config — serves the built static site (dist/) as
+# static assets via `npx wrangler deploy`. No server code; assets only.
+name = "epg-cranfield-website"
+compatibility_date = "2025-01-01"
+
+[assets]
+directory = "./dist"

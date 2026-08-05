@@ -16,7 +16,11 @@ const mapUrl = settings.mapEmbedUrl || 'https://www.openstreetmap.org/export/emb
 // Web3Forms handles the contact form (works on any host). Get a free access key
 // at https://web3forms.com and set PUBLIC_WEB3FORMS_ACCESS_KEY. If it's not set,
 // the page shows an email link instead of the form.
-const web3key = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
+const web3key =
+  import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ||
+  (globalThis as unknown as { process?: { env?: Record<string, string | undefined> } })
+    .process?.env?.PUBLIC_WEB3FORMS_ACCESS_KEY ||
+  '';
 ---
 
 <Base title="Contact — Energy and Power Group">

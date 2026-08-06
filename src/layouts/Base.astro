@@ -47,5 +47,16 @@ const {
       }
       .skip:focus { left: 0; }
     </style>
+
+    {/* Cloudflare Web Analytics — privacy-friendly, no cookies. Only on the
+        live (production) build, so local development doesn't skew the stats. */}
+    {import.meta.env.PROD && (
+      <script
+        is:inline
+        type="module"
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "13f5682344dd41b79b4ee5fa03bef12d"}'
+      ></script>
+    )}
   </body>
 </html>

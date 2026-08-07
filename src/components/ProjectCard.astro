@@ -1,12 +1,13 @@
 ---
 import type { Project } from '../lib/types';
+import { cdnImg } from '../lib/sanity';
 interface Props { project: Project; }
 const { project } = Astro.props;
 ---
 
 <article class="project card">
   <div class="project__media">
-    {project.imageUrl && <img src={project.imageUrl} alt={project.title} loading="lazy" />}
+    {project.imageUrl && <img src={cdnImg(project.imageUrl, 900)} alt={project.title} loading="lazy" />}
     <span class:list={['chip', project.status === 'ongoing' ? 'chip--ongoing' : 'chip--completed', 'project__status']}>
       {project.status}
     </span>

@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import PortableText from '../../components/PortableText.astro';
 import { getNews } from '../../lib/content';
+import { cdnImg } from '../../lib/sanity';
 import type { NewsPost } from '../../lib/types';
 
 export async function getStaticPaths() {
@@ -32,7 +33,7 @@ const dateStr = new Date(post.date).toLocaleDateString('en-GB', {
 
     <div class="container post__body-wrap">
       {post.imageUrl && (
-        <div class="post__media"><img src={post.imageUrl} alt={post.title} /></div>
+        <div class="post__media"><img src={cdnImg(post.imageUrl, 1200)} alt={post.title} /></div>
       )}
       <div class="post__body">
         <PortableText value={post.body} />

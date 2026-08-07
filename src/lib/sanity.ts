@@ -60,3 +60,16 @@ export function urlForImage(source: unknown): string {
     return '';
   }
 }
+
+/**
+ * Optimise a Sanity CDN image URL: resize to the width actually displayed and
+ * auto-convert to a modern format (WebP/AVIF). Turns multi-MB originals into
+ * tens of KB — huge bandwidth saving and faster loads. Non-Sanity URLs (local
+ * placeholders) are returned unchanged.
+ */
+export function cdnImg(url: string | undefined, width: number, quality = 72): string {
+  if (!url) return '';
+  if (!url.includes('cdn.sanity.io')) return url;
+  const sep = url.includes('?') ? '&' : '?';
+  return `${url}${sep}w=${width}&auto=format&fit=max&q=${quality}`;
+}

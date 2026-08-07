@@ -1,5 +1,6 @@
 ---
 import type { NewsPost } from '../lib/types';
+import { cdnImg } from '../lib/sanity';
 interface Props { post: NewsPost; }
 const { post } = Astro.props;
 
@@ -14,7 +15,7 @@ const excerpt =
 
 <a class="news card" href={`/news/${post.slug}`}>
   {post.imageUrl && (
-    <div class="news__media"><img src={post.imageUrl} alt={post.title} loading="lazy" /></div>
+    <div class="news__media"><img src={cdnImg(post.imageUrl, 800)} alt={post.title} loading="lazy" /></div>
   )}
   <div class="news__body">
     <time class="news__date mono" datetime={post.date}>{dateStr}</time>

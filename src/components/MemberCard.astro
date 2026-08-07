@@ -1,6 +1,7 @@
 ---
 import type { Member } from '../lib/types';
 import Icon from './Icon.astro';
+import { cdnImg } from '../lib/sanity';
 interface Props { member: Member; }
 const { member } = Astro.props;
 ---
@@ -8,7 +9,7 @@ const { member } = Astro.props;
 <article class="member card">
   <div class="member__photo">
     {member.photoUrl
-      ? <img src={member.photoUrl} alt={member.name} loading="lazy" />
+      ? <img src={cdnImg(member.photoUrl, 600)} alt={member.name} loading="lazy" />
       : <div class="member__ph">{member.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</div>}
   </div>
   <div class="member__body">

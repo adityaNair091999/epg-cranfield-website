@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Corners from '../components/Corners.astro';
 import Icon from '../components/Icon.astro';
 import { getRecentNews, getFeaturedPublications, getMembers, getFeaturedProjects, getHomePage } from '../lib/content';
+import { cdnImg } from '../lib/sanity';
 
 const [news, pubs, allMembers, projects, home] = await Promise.all([
   getRecentNews(),
@@ -88,8 +89,8 @@ const excerpt = (post: (typeof news)[number]) =>
         <Corners />
         <div class="duotone hero__media">
           {hero.videoUrl
-            ? <video src={hero.videoUrl} autoplay muted loop playsinline poster={hero.imageUrl}></video>
-            : <img src={hero.imageUrl} alt={hero.caption} />}
+            ? <video src={hero.videoUrl} autoplay muted loop playsinline poster={cdnImg(hero.imageUrl, 1000)}></video>
+            : <img src={cdnImg(hero.imageUrl, 1000)} alt={hero.caption} />}
         </div>
         <figcaption class="hero__caption">
           <span class="mono">FIG 01</span> {hero.caption}
@@ -212,7 +213,7 @@ const excerpt = (post: (typeof news)[number]) =>
               <Corners />
               <div class="duotone teamcard__media">
                 {m.photoUrl
-                  ? <img src={m.photoUrl} alt={m.name} loading="lazy" />
+                  ? <img src={cdnImg(m.photoUrl, 400)} alt={m.name} loading="lazy" />
                   : <div class="teamcard__ph">{m.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</div>}
               </div>
             </div>

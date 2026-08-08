@@ -150,16 +150,14 @@ img { max-width: 100%; display: block; }
 .corner.bl { bottom: -6px; left: -6px; }
 .corner.br { bottom: -6px; right: -6px; }
 
-/* ------- Duotone photography (desaturate + accent wash) ------- */
+/* ------- Photography (full colour; keeps the square, cover-fit framing) -------
+   Note: the old steel-blue "duotone" wash (grayscale + accent colour overlay)
+   was removed so photos display in their natural colour. The .duotone class name
+   is kept because the markup still uses it for the framing/cover-fit. */
 .duotone { position: relative; overflow: hidden; }
 .duotone > img,
 .duotone > video {
   width: 100%; height: 100%; object-fit: cover; display: block;
-  filter: grayscale(1) contrast(1.05) brightness(1.02);
-}
-.duotone::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: var(--accent); mix-blend-mode: color;
 }
 
 /* ------- Buttons ------- */

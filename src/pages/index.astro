@@ -86,7 +86,6 @@ const excerpt = (post: (typeof news)[number]) =>
       <!-- Hero figure. Upload a video in Sanity → Home Page → Hero video and it
            plays here (duotoned) instead of the image. -->
       <figure class="hero__figure blueprint">
-        <Corners />
         <div class="duotone hero__media">
           {hero.videoUrl
             ? <video src={hero.videoUrl} autoplay muted loop playsinline poster={cdnImg(hero.imageUrl, 1000)}></video>
@@ -210,7 +209,6 @@ const excerpt = (post: (typeof news)[number]) =>
         {members.slice(0, 10).map((m) => (
           <a class="teamcard" href="/members">
             <div class="teamcard__photo blueprint">
-              <Corners />
               <div class="duotone teamcard__media">
                 {m.photoUrl
                   ? <img src={cdnImg(m.photoUrl, 400)} alt={m.name} loading="lazy" />

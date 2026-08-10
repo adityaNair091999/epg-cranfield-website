@@ -1,0 +1,123 @@
+---
+import Base from '../../layouts/Base.astro';
+import PortableText from '../../components/PortableText.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import Corners from '../../components/Corners.astro';
+import Icon from '../../components/Icon.astro';
+import { getProjects } from '../../lib/content';
+import { cdnImg } from '../../lib/sanity';
+import { projectSlug } from '../../lib/slug';
+import type { Project } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: projectSlug(project) },
+    props: { project },
+  }));
+}
+
+interface Props { project: Project; }
+const { project } = Astro.props;
+
+const photos = (project.gallery ?? []).filter((m) => m._type === 'image' && m.imageUrl);
+const videos = (project.gallery ?? []).filter((m) => m._type === 'videoEmbed' && m.url);
+---
+
+<Base title={`${project.title} — Energy and Power Group`}>
+  <article class="project">
+    <div class="project__hero">
+      <div class="container">
+        <a href="/research" class="project__back mono">&larr; All research</a>
+        <span class:list={['chip', project.status === 'ongoing' ? 'chip--ongoing' : 'chip--completed', 'project__status']}>{project.status}</span>
+        <h1>{project.title}</h1>
+        {project.description && <p class="project__lead">{project.description}</p>}
+      </div>
+    </div>
+
+    <div class="container project__body-wrap">
+      {project.imageUrl && (
+        <div class="project__cover blueprint">
+          <Corners />
+          <img src={cdnImg(project.imageUrl, 1400)} alt={project.title} />
+        </div>
+      )}
+
+      {project.body && project.body.length > 0 && (
+        <div class="project__body"><PortableText value={project.body} /></div>
+      )}
+
+      {videos.length > 0 && (
+        <section class="project__section">
+          <span class="eyebrow">Videos</span>
+          <div class="project__videos">
+            {videos.map((v) => <VideoEmbed url={v.url!} caption={v.caption} />)}
+          </div>
+        </section>
+      )}
+
+      {photos.length > 0 && (
+        <section class="project__section">
+          <span class="eyebrow">Gallery</span>
+          <div class="project__photos">
+            {photos.map((p) => (
+              <figure class="project__photo blueprint">
+                <Corners />
+                <img src={cdnImg(p.imageUrl, 900)} alt={p.caption || project.title} loading="lazy" />
+                {p.caption && <figcaption>{p.caption}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {project.relatedPublications?.length > 0 && (
+        <section class="project__section">
+          <span class="eyebrow">Related publications</span>
+          <ul class="project__pubs">
+            {project.relatedPublications.map((pub) => (
+              <li>
+                {pub.doi
+                  ? <a href={pub.doi} target="_blank" rel="noopener">{pub.title} ({pub.year}) <Icon name="arrow" size={14} /></a>
+                  : <span>{pub.title} ({pub.year})</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  </article>
+</Base>
+
+<style>
+  .project__hero { background: var(--ink); color: var(--paper); padding-block: clamp(2.5rem, 6vw, 4rem); }
+  .project__back { display: inline-block; color: var(--steel-300); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.78rem; margin-bottom: 1.2rem; }
+  .project__back:hover { color: var(--accent); }
+  .project__status { display: inline-block; background: var(--paper); margin-bottom: 0.9rem; }
+  .project__hero h1 { color: var(--white); max-width: 22ch; }
+  .project__lead { max-width: 60ch; color: var(--steel-200); font-size: 1.15rem; margin: 0.6rem 0 0; }
+
+  .project__body-wrap { padding-block: clamp(2.5rem, 6vw, 4rem); max-width: 760px; }
+  .project__cover { border: 1px solid var(--border); margin-bottom: 2.5rem; }
+  .project__cover img { width: 100%; display: block; }
+  .project__body { font-size: 1.08rem; margin-bottom: 2.5rem; }
+  /* Let the write-up fill the column so text and media line up. */
+  .project__body :global(.prose) { max-width: none; }
+  /* Justified text (flush both edges); hyphenation keeps the spacing even. */
+  .project__body :global(.prose p),
+  .project__body :global(.prose li) { text-align: justify; hyphens: auto; }
+
+  .project__section { margin-top: 2.5rem; }
+  .project__section .eyebrow { margin-bottom: 1rem; }
+  .project__videos { display: grid; gap: 1.5rem; }
+  .project__photos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .project__photo { margin: 0; border: 1px solid var(--border); }
+  .project__photo img { width: 100%; display: block; }
+  .project__photo figcaption { font-size: 0.85rem; color: var(--text-dim); padding: 0.5rem 0.7rem; }
+
+  .project__pubs { list-style: none; margin: 0; padding: 0; }
+  .project__pubs li { padding: 0.7rem 0; border-top: 1px solid var(--border); font-size: 0.98rem; }
+  .project__pubs a { display: inline-flex; align-items: center; gap: 0.35rem; }
+
+  @media (max-width: 640px) { .project__photos { grid-template-columns: 1fr; } }
+</style>

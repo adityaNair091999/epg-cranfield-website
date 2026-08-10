@@ -1,0 +1,104 @@
+---
+// Renders a YouTube/Vimeo link as an embedded, playable video, kept neatly
+// inside a 16:9 frame. YouTube uses a lightweight "facade" (thumbnail + play
+// button) that only loads the real player when clicked, keeping pages fast.
+interface Props {
+  url: string;
+  caption?: string;
+}
+const { url, caption } = Astro.props;
+
+const yt = url.match(
+  /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
+);
+const ytId = yt ? yt[1] : null;
+
+const vim = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+const vimId = vim ? vim[1] : null;
+---
+
+<figure class="video">
+  {ytId ? (
+    <div class="video__frame">
+      <button
+        class="video__facade"
+        data-embed={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0`}
+        aria-label={caption ? `Play video: ${caption}` : 'Play video'}
+        type="button"
+      >
+        <img
+          class="video__thumb"
+          src={`https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`}
+          alt={caption || 'Video thumbnail'}
+          loading="lazy"
+        />
+        <span class="video__play" aria-hidden="true">
+          <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.5 7.7a8 8 0 0 0-5.6-5.7C56 .6 34 .6 34 .6S12 .6 7.1 2a8 8 0 0 0-5.6 5.7A83 83 0 0 0 0 24a83 83 0 0 0 1.5 16.3 8 8 0 0 0 5.6 5.7C12 47.4 34 47.4 34 47.4s22 0 26.9-1.4a8 8 0 0 0 5.6-5.7A83 83 0 0 0 68 24a83 83 0 0 0-1.5-16.3z" fill="#e11"/><path d="M27 34l18-10-18-10z" fill="#fff"/></svg>
+        </span>
+      </button>
+    </div>
+  ) : vimId ? (
+    <div class="video__frame">
+      <iframe
+        src={`https://player.vimeo.com/video/${vimId}`}
+        title={caption || 'Video'}
+        allow="autoplay; fullscreen; picture-in-picture"
+        loading="lazy"
+        allowfullscreen
+      ></iframe>
+    </div>
+  ) : (
+    <a class="video__link" href={url} target="_blank" rel="noopener">Watch video ↗</a>
+  )}
+  {caption && <figcaption class="video__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .video { margin: 0; }
+  /* The frame is the only positioned box — the player always stays inside it. */
+  .video__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--steel-900);
+  }
+  .video__facade,
+  .video__frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .video__facade { padding: 0; cursor: pointer; background: none; }
+  .video__thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video__play { position: absolute; inset: 0; display: grid; place-items: center; transition: transform 0.15s ease; }
+  .video__play svg { filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); opacity: 0.9; }
+  .video__facade:hover .video__play { transform: scale(1.08); }
+  .video__link {
+    display: inline-flex; font-family: var(--font-head); text-transform: uppercase;
+    letter-spacing: 0.05em; border-bottom: 2px solid var(--accent);
+  }
+  .video__caption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.video__facade').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const src = btn.dataset.embed;
+      if (!src) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = src;
+      iframe.title = btn.getAttribute('aria-label') || 'Video';
+      iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+      iframe.setAttribute('allowfullscreen', '');
+      // Size it inline — scoped CSS doesn't apply to JS-created elements. The
+      // parent .video__frame is position:relative, so this fills the frame (not
+      // the page).
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0';
+      btn.replaceWith(iframe);
+    });
+  });
+</script>

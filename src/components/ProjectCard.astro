@@ -1,20 +1,24 @@
 ---
 import type { Project } from '../lib/types';
 import { cdnImg } from '../lib/sanity';
+import { projectSlug } from '../lib/slug';
+import Icon from './Icon.astro';
 interface Props { project: Project; }
 const { project } = Astro.props;
+const href = `/research/${projectSlug(project)}`;
 ---
 
 <article class="project card">
-  <div class="project__media">
+  <a class="project__media" href={href} aria-label={project.title}>
     {project.imageUrl && <img src={cdnImg(project.imageUrl, 900)} alt={project.title} loading="lazy" />}
     <span class:list={['chip', project.status === 'ongoing' ? 'chip--ongoing' : 'chip--completed', 'project__status']}>
       {project.status}
     </span>
-  </div>
+  </a>
   <div class="project__body">
-    <h3 class="project__title">{project.title}</h3>
+    <h3 class="project__title"><a href={href}>{project.title}</a></h3>
     <p class="project__desc">{project.description}</p>
+    <a class="project__more" href={href}>View project <Icon name="arrow" size={15} /></a>
     {project.relatedPublications?.length > 0 && (
       <div class="project__pubs">
         <span class="project__pubs-label mono">Related publications</span>
@@ -39,7 +43,14 @@ const { project } = Astro.props;
   .project__status { position: absolute; top: 0.9rem; left: 0.9rem; background: var(--white); }
   .project__body { padding: 1.3rem 1.4rem 1.5rem; display: flex; flex-direction: column; flex: 1; }
   .project__title { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .project__title a { color: var(--ink); }
+  .project__title a:hover { color: var(--accent-dark); }
   .project__desc { color: var(--text-dim); font-size: 0.97rem; }
+  .project__more {
+    display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.6rem;
+    font-family: var(--font-head); font-weight: 600; font-size: 0.9rem; color: var(--accent-dark);
+  }
+  .project__media { display: block; }
   .project__pubs { margin-top: 1.1rem; border-top: 1px solid var(--border); padding-top: 0.9rem; }
   .project__pubs-label { display: block; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel-400); margin-bottom: 0.4rem; }
   .project__pubs ul { margin: 0; padding-left: 1rem; }

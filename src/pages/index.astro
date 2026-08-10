@@ -4,6 +4,7 @@ import Corners from '../components/Corners.astro';
 import Icon from '../components/Icon.astro';
 import { getRecentNews, getFeaturedPublications, getMembers, getFeaturedProjects, getHomePage } from '../lib/content';
 import { cdnImg } from '../lib/sanity';
+import VideoEmbed from '../components/VideoEmbed.astro';
 
 const [news, pubs, allMembers, projects, home] = await Promise.all([
   getRecentNews(),
@@ -26,7 +27,12 @@ const hero = {
   videoUrl: home.heroVideoUrl || '',
   caption: home.heroCaption || 'Installed FPV platform · field footage',
 };
+// Home videos — a curated list managed in Sanity (Home Page → Home videos).
+const homeVideos = (home.videos ?? []).filter((v) => v.url);
+
 const heads = {
+  videosEyebrow: home.videosEyebrow || 'Watch',
+  videosTitle: home.videosTitle || 'Videos',
   researchEyebrow: home.researchEyebrow || 'What We Do',
   researchTitle: home.researchTitle || 'Research Highlights',
   newsEyebrow: home.newsEyebrow || 'News',
@@ -130,6 +136,21 @@ const excerpt = (post: (typeof news)[number]) =>
         <div class="research__facilities" id="rd-facilities">
           {research[0].facilities.map((f) => <span class="chip">{f}</span>)}
         </div>
+      </div>
+    </div>
+  </section>
+  )}
+
+  <!-- ========================== HOME VIDEOS ========================== -->
+  {homeVideos.length > 0 && (
+  <section id="videos" class="section section--top0">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">{heads.videosEyebrow}</span>
+        <h2>{heads.videosTitle}</h2>
+      </div>
+      <div class="grid grid-3">
+        {homeVideos.map((v) => <VideoEmbed url={v.url!} caption={v.caption} />)}
       </div>
     </div>
   </section>

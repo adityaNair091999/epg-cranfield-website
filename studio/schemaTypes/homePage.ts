@@ -7,7 +7,7 @@ export default defineType({
   type: 'document',
   groups: [
     { name: 'hero', title: 'Hero banner', default: true },
-    { name: 'videos', title: 'Home videos' },
+    { name: 'videos', title: 'Gallery' },
     { name: 'sections', title: 'Section headings' },
   ],
   fields: [
@@ -24,11 +24,11 @@ export default defineType({
     defineField({ name: 'heroCaption', title: 'Image/video caption', type: 'string', group: 'hero', initialValue: 'Installed FPV platform · field footage' }),
 
     // ---- Home videos ----
-    defineField({ name: 'videosEyebrow', title: 'Videos — small line', type: 'string', group: 'videos', initialValue: 'Watch' }),
-    defineField({ name: 'videosTitle', title: 'Videos — heading', type: 'string', group: 'videos', initialValue: 'Videos' }),
+    defineField({ name: 'videosEyebrow', title: 'Gallery — small line', type: 'string', group: 'videos', initialValue: 'Watch' }),
+    defineField({ name: 'videosTitle', title: 'Gallery — heading', type: 'string', group: 'videos', initialValue: 'Gallery' }),
     defineField({
       name: 'videos',
-      title: 'Videos (shown on the home page, 3 per row)',
+      title: 'Gallery videos (shown on the home page, 3 per row)',
       type: 'array',
       group: 'videos',
       description: 'Add videos by pasting a YouTube/Vimeo link. This list is separate from project videos.',

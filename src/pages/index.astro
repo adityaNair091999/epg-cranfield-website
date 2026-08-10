@@ -32,7 +32,7 @@ const homeVideos = (home.videos ?? []).filter((v) => v.url);
 
 const heads = {
   videosEyebrow: home.videosEyebrow || 'Watch',
-  videosTitle: home.videosTitle || 'Videos',
+  videosTitle: home.videosTitle || 'Gallery',
   researchEyebrow: home.researchEyebrow || 'What We Do',
   researchTitle: home.researchTitle || 'Research Highlights',
   newsEyebrow: home.newsEyebrow || 'News',
@@ -143,7 +143,7 @@ const excerpt = (post: (typeof news)[number]) =>
 
   <!-- ========================== HOME VIDEOS ========================== -->
   {homeVideos.length > 0 && (
-  <section id="videos" class="section section--top0">
+  <section id="gallery" class="section section--top0">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">{heads.videosEyebrow}</span>
@@ -266,7 +266,7 @@ const excerpt = (post: (typeof news)[number]) =>
 
 <style>
   /* -------- HERO -------- */
-  .hero { border-bottom: 1px solid var(--border); }
+  .hero { }
   .hero__inner {
     position: relative;
     display: grid;

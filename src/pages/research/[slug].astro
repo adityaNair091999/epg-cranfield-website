@@ -103,6 +103,9 @@ const videos = (project.gallery ?? []).filter((m) => m._type === 'videoEmbed' &&
   .project__body { font-size: 1.08rem; margin-bottom: 2.5rem; }
   /* Let the write-up fill the column so text and media line up. */
   .project__body :global(.prose) { max-width: none; }
+  /* Justified text (flush both edges); hyphenation keeps the spacing even. */
+  .project__body :global(.prose p),
+  .project__body :global(.prose li) { text-align: justify; hyphens: auto; }
 
   .project__section { margin-top: 2.5rem; }
   .project__section .eyebrow { margin-bottom: 1rem; }

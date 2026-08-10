@@ -97,10 +97,12 @@ const videos = (project.gallery ?? []).filter((m) => m._type === 'videoEmbed' &&
   .project__hero h1 { color: var(--white); max-width: 22ch; }
   .project__lead { max-width: 60ch; color: var(--steel-200); font-size: 1.15rem; margin: 0.6rem 0 0; }
 
-  .project__body-wrap { padding-block: clamp(2.5rem, 6vw, 4rem); max-width: 900px; }
+  .project__body-wrap { padding-block: clamp(2.5rem, 6vw, 4rem); max-width: 760px; }
   .project__cover { border: 1px solid var(--border); margin-bottom: 2.5rem; }
   .project__cover img { width: 100%; display: block; }
   .project__body { font-size: 1.08rem; margin-bottom: 2.5rem; }
+  /* Let the write-up fill the column so text and media line up. */
+  .project__body :global(.prose) { max-width: none; }
 
   .project__section { margin-top: 2.5rem; }
   .project__section .eyebrow { margin-bottom: 1rem; }

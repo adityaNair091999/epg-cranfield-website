@@ -94,7 +94,10 @@ const vimId = vim ? vim[1] : null;
       iframe.title = btn.getAttribute('aria-label') || 'Video';
       iframe.allow = 'autoplay; fullscreen; picture-in-picture';
       iframe.setAttribute('allowfullscreen', '');
-      // Replace the facade *inside its frame* so the player stays boxed.
+      // Size it inline — scoped CSS doesn't apply to JS-created elements. The
+      // parent .video__frame is position:relative, so this fills the frame (not
+      // the page).
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0';
       btn.replaceWith(iframe);
     });
   });

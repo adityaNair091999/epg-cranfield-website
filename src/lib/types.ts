@@ -108,6 +108,9 @@ export interface HomePage {
   heroImageUrl?: string;
   heroVideoUrl?: string;
   heroCaption?: string;
+  videosEyebrow?: string;
+  videosTitle?: string;
+  videos?: Array<{ _key?: string; url?: string; caption?: string }>;
   researchEyebrow?: string;
   researchTitle?: string;
   newsEyebrow?: string;

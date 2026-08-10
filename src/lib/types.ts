@@ -43,12 +43,23 @@ export interface Publication {
   featured: boolean;
 }
 
+export interface MediaItem {
+  _type: 'image' | 'videoEmbed';
+  _key?: string;
+  imageUrl?: string; // present for image items
+  url?: string; // present for videoEmbed items (YouTube/Vimeo link)
+  caption?: string;
+}
+
 export interface Project {
   _id: string;
   title: string;
+  slug?: string;
   description: string;
   imageUrl: string;
   status: 'ongoing' | 'completed';
+  body?: PortableText;
+  gallery?: MediaItem[];
   relatedPublications: Array<Pick<Publication, '_id' | 'title' | 'year' | 'doi'>>;
   featured: boolean;
 }

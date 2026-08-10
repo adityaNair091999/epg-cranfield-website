@@ -4,6 +4,7 @@ import project from './project';
 import newsPost from './newsPost';
 import opportunity from './opportunity';
 import blockContent from './blockContent';
+import videoEmbed from './videoEmbed';
 import siteSettings from './siteSettings';
 import homePage from './homePage';
 import pageBanners from './pageBanners';
@@ -18,4 +19,5 @@ export const schemaTypes = [
   newsPost,
   opportunity,
   blockContent,
+  videoEmbed,
 ];

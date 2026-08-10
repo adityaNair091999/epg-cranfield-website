@@ -14,17 +14,16 @@ export const featuredPublicationsQuery = `*[_type == "publication" && featured =
   _id, title, authors, journal, year, doi, abstract, bibtex, featured
 }`;
 
-export const projectsQuery = `*[_type == "project"] | order(featured desc, title asc){
-  _id, title, description, status, featured,
+const projectFields = `
+  _id, title, "slug": slug.current, description, status, featured, body,
   "imageUrl": image.asset->url,
+  "gallery": gallery[]{ _type, _key, caption, url, "imageUrl": asset->url },
   "relatedPublications": relatedPublications[]->{ _id, title, year, doi }
-}`;
+`;
 
-export const featuredProjectsQuery = `*[_type == "project" && featured == true] | order(title asc)[0...3]{
-  _id, title, description, status, featured,
-  "imageUrl": image.asset->url,
-  "relatedPublications": relatedPublications[]->{ _id, title, year, doi }
-}`;
+export const projectsQuery = `*[_type == "project"] | order(featured desc, title asc){${projectFields}}`;
+
+export const featuredProjectsQuery = `*[_type == "project" && featured == true] | order(title asc)[0...3]{${projectFields}}`;
 
 export const newsQuery = `*[_type == "newsPost"] | order(date desc){
   _id, title, date, "slug": slug.current, body,

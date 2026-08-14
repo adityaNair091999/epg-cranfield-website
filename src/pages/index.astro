@@ -159,6 +159,12 @@ const excerpt = (post: (typeof news)[number]) =>
               <span class="galleryrow__n mono">{String(i + 1).padStart(2, '0')}</span>
               {v.title && <h3>{v.title}</h3>}
               {v.description && <p>{v.description}</p>}
+              {(v.projectLink || v.papersLink) && (
+                <div class="galleryrow__links">
+                  {v.projectLink && <a class="galleryrow__link" href={v.projectLink}>View project &rarr;</a>}
+                  {v.papersLink && <a class="galleryrow__link" href={v.papersLink}>Related paper(s) &rarr;</a>}
+                </div>
+              )}
             </div>
           </article>
         ))}
@@ -328,6 +334,12 @@ const excerpt = (post: (typeof news)[number]) =>
   .galleryrow--rev .galleryrow__video { order: 2; }
   .galleryrow--rev .galleryrow__text { order: 1; }
   .galleryrow__video { border: 1px solid var(--border); }
+  .galleryrow__links { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; margin-top: 1rem; }
+  .galleryrow__link {
+    font-family: var(--font-head); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 0.8rem; color: var(--accent-dark); text-decoration: none;
+  }
+  .galleryrow__link:hover { color: var(--accent-deep); text-decoration: underline; }
   .galleryrow__n {
     display: block; font-size: 1.5rem; font-weight: 600; color: var(--border);
     letter-spacing: 0.05em; margin-bottom: 0.4rem;

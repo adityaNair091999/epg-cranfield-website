@@ -23,6 +23,20 @@ export default defineType({
       rows: 4,
       description: 'What the video shows (a sentence or a short paragraph).',
     }),
+    defineField({
+      name: 'projectLink',
+      title: 'Link to project (optional)',
+      type: 'url',
+      description: 'A page on this site or elsewhere, e.g. /research/floating-pv',
+      validation: (r) => r.uri({ allowRelative: true, scheme: ['http', 'https'] }),
+    }),
+    defineField({
+      name: 'papersLink',
+      title: 'Link to paper(s) (optional)',
+      type: 'url',
+      description: 'A DOI, journal page, or the Publications page, e.g. /publications',
+      validation: (r) => r.uri({ allowRelative: true, scheme: ['http', 'https'] }),
+    }),
     defineField({ name: 'caption', title: 'Caption (optional, used in project galleries)', type: 'string' }),
   ],
   preview: {

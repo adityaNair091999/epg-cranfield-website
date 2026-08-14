@@ -160,6 +160,12 @@ const excerpt = (post: (typeof news)[number]) =>
                 <button class="gallcard__toggle" type="button" hidden>Read more &darr;</button>
               </>
             )}
+            {(v.projectLink || v.papersLink) && (
+              <div class="gallcard__links">
+                {v.projectLink && <a class="gallcard__link" href={v.projectLink}>View project &rarr;</a>}
+                {v.papersLink && <a class="gallcard__link" href={v.papersLink}>Related paper(s) &rarr;</a>}
+              </div>
+            )}
           </article>
         ))}
       </div>
@@ -348,6 +354,12 @@ const excerpt = (post: (typeof news)[number]) =>
     font-size: 0.8rem; color: var(--accent-dark);
   }
   .gallcard__toggle:hover { color: var(--accent-deep); }
+  .gallcard__links { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; margin-top: 0.75rem; }
+  .gallcard__link {
+    font-family: var(--font-head); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 0.78rem; color: var(--accent-dark); text-decoration: none;
+  }
+  .gallcard__link:hover { color: var(--accent-deep); text-decoration: underline; }
   .research__card {
     text-align: left; font: inherit; cursor: pointer;
     background: transparent; border: 1px solid var(--border);

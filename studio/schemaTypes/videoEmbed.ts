@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, defineArrayMember } from 'sanity';
 
 // A video embed = a YouTube or Vimeo link (the video is hosted there, not
 // uploaded here — keeps it free and fast). Editors paste the link and can add a
@@ -31,11 +31,30 @@ export default defineType({
       validation: (r) => r.uri({ allowRelative: true, scheme: ['http', 'https'] }),
     }),
     defineField({
-      name: 'papersLink',
-      title: 'Link to paper(s) (optional)',
-      type: 'url',
-      description: 'A DOI, journal page, or the Publications page, e.g. /publications',
-      validation: (r) => r.uri({ allowRelative: true, scheme: ['http', 'https'] }),
+      name: 'papers',
+      title: 'Related paper(s) (optional)',
+      type: 'array',
+      description: 'Add one entry per paper. Use "Add item" for more.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'paperLink',
+          fields: [
+            defineField({ name: 'label', title: 'Label', type: 'string', description: 'What the link says, e.g. the paper title or "OMAE 2022".' }),
+            defineField({
+              name: 'url',
+              title: 'Link (DOI or page)',
+              type: 'url',
+              description: 'A DOI, journal page, or the Publications page, e.g. /publications',
+              validation: (r) => r.required().uri({ allowRelative: true, scheme: ['http', 'https'] }),
+            }),
+          ],
+          preview: {
+            select: { title: 'label', subtitle: 'url' },
+            prepare: ({ title, subtitle }) => ({ title: title || subtitle || 'Paper', subtitle }),
+          },
+        }),
+      ],
     }),
     defineField({ name: 'caption', title: 'Caption (optional, used in project galleries)', type: 'string' }),
   ],

@@ -57,7 +57,7 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   "heroImageUrl": heroImage.asset->url,
   "heroVideoUrl": heroVideo.asset->url,
   videosEyebrow, videosTitle,
-  "videos": videos[]{ _key, url, caption },
+  "videos": videos[]{ _key, url, title, description, caption },
   researchEyebrow, researchTitle, newsEyebrow, newsTitle,
   publicationsEyebrow, publicationsTitle, teamEyebrow, teamTitle
 }`;

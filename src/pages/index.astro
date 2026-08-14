@@ -149,8 +149,19 @@ const excerpt = (post: (typeof news)[number]) =>
         <span class="eyebrow">{heads.videosEyebrow}</span>
         <h2>{heads.videosTitle}</h2>
       </div>
-      <div class="grid grid-3">
-        {homeVideos.map((v) => <VideoEmbed url={v.url!} caption={v.caption} />)}
+      <div class="grid grid-3 gallgrid">
+        {homeVideos.map((v) => (
+          <article class="gallcard">
+            <div class="gallcard__video blueprint"><VideoEmbed url={v.url!} /></div>
+            {v.title && <h3 class="gallcard__title">{v.title}</h3>}
+            {v.description && (
+              <>
+                <p class="gallcard__desc clamp">{v.description}</p>
+                <button class="gallcard__toggle" type="button" hidden>Read more &darr;</button>
+              </>
+            )}
+          </article>
+        ))}
       </div>
     </div>
   </section>
@@ -264,6 +275,23 @@ const excerpt = (post: (typeof news)[number]) =>
   });
 </script>
 
+<script>
+  // Gallery: show a "Read more" toggle only when the description is clamped.
+  document.querySelectorAll<HTMLElement>('.gallcard').forEach((card) => {
+    const desc = card.querySelector<HTMLElement>('.gallcard__desc');
+    const btn = card.querySelector<HTMLButtonElement>('.gallcard__toggle');
+    if (!desc || !btn) return;
+    if (desc.scrollHeight > desc.clientHeight + 2) {
+      btn.hidden = false;
+      btn.addEventListener('click', () => {
+        desc.classList.toggle('clamp');
+        const open = !desc.classList.contains('clamp');
+        btn.innerHTML = open ? 'Read less &uarr;' : 'Read more &darr;';
+      });
+    }
+  });
+</script>
+
 <style>
   /* -------- HERO -------- */
   .hero { }
@@ -304,6 +332,22 @@ const excerpt = (post: (typeof news)[number]) =>
 
   /* -------- RESEARCH -------- */
   .section--top0 { padding-top: 0; }
+
+  /* -------- GALLERY (grid + expandable descriptions) -------- */
+  .gallgrid { align-items: start; }
+  .gallcard { display: flex; flex-direction: column; }
+  .gallcard__video { border: 1px solid var(--border); }
+  .gallcard__title { font-size: 1.2rem; margin: 0.9rem 0 0.45rem; }
+  .gallcard__desc { color: var(--text-dim); font-size: 0.94rem; line-height: 1.55; margin: 0; }
+  .gallcard__desc.clamp {
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+  }
+  .gallcard__toggle {
+    align-self: flex-start; margin-top: 0.5rem; padding: 0; background: none; border: 0; cursor: pointer;
+    font-family: var(--font-head); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 0.8rem; color: var(--accent-dark);
+  }
+  .gallcard__toggle:hover { color: var(--accent-deep); }
   .research__card {
     text-align: left; font: inherit; cursor: pointer;
     background: transparent; border: 1px solid var(--border);

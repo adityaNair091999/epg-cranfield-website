@@ -1,12 +1,14 @@
 import { defineType, defineField } from 'sanity';
 
 // A video embed = a YouTube or Vimeo link (the video is hosted there, not
-// uploaded here — keeps it free and fast). Editors just paste the link.
+// uploaded here — keeps it free and fast). Editors paste the link and can add a
+// title and a description of what the video shows.
 export default defineType({
   name: 'videoEmbed',
   title: 'Video (YouTube / Vimeo)',
   type: 'object',
   fields: [
+    defineField({ name: 'title', title: 'Title', type: 'string', description: 'A short heading shown with the video.' }),
     defineField({
       name: 'url',
       title: 'YouTube or Vimeo link',
@@ -14,10 +16,17 @@ export default defineType({
       description: 'Paste the normal link, e.g. https://www.youtube.com/watch?v=... or https://youtu.be/...',
       validation: (r) => r.required(),
     }),
-    defineField({ name: 'caption', title: 'Caption (optional)', type: 'string' }),
+    defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      rows: 4,
+      description: 'What the video shows (a sentence or a short paragraph).',
+    }),
+    defineField({ name: 'caption', title: 'Caption (optional, used in project galleries)', type: 'string' }),
   ],
   preview: {
-    select: { title: 'caption', subtitle: 'url' },
-    prepare: ({ title, subtitle }) => ({ title: title || 'Video', subtitle }),
+    select: { title: 'title', subtitle: 'url', desc: 'description' },
+    prepare: ({ title, subtitle, desc }) => ({ title: title || desc?.slice(0, 40) || 'Video', subtitle }),
   },
 });

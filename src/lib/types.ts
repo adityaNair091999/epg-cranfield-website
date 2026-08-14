@@ -110,7 +110,15 @@ export interface HomePage {
   heroCaption?: string;
   videosEyebrow?: string;
   videosTitle?: string;
-  videos?: Array<{ _key?: string; url?: string; caption?: string }>;
+  videos?: Array<{
+    _key?: string;
+    url?: string;
+    title?: string;
+    description?: string;
+    projectLink?: string;
+    papers?: Array<{ _key?: string; label?: string; url?: string }>;
+    caption?: string;
+  }>;
   researchEyebrow?: string;
   researchTitle?: string;
   newsEyebrow?: string;

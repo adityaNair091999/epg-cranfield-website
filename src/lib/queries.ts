@@ -51,7 +51,7 @@ export const opportunitiesQuery = `*[_type == "opportunity"] | order(open desc, 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   groupName, groupShortName, university, navCtaLabel, navCtaLink,
   addressLines, email, phone, groupLeadName, groupLeadRole, charityLine, mapEmbedUrl,
-  showResearch, showPublications, showMembers, showNews, showOpportunities, showContact
+  showResearch, showPublications, showMembers, showPartners, showNews, showOpportunities, showContact
 }`;
 
 export const homePageQuery = `*[_type == "homePage"][0]{

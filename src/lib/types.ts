@@ -99,6 +99,7 @@ export interface SiteSettings {
   showResearch?: boolean;
   showPublications?: boolean;
   showMembers?: boolean;
+  showPartners?: boolean;
   showNews?: boolean;
   showOpportunities?: boolean;
   showContact?: boolean;

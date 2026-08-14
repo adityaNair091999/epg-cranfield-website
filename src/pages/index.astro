@@ -285,9 +285,12 @@ const excerpt = (post: (typeof news)[number]) =>
   {partners.length > 0 && (
   <section id="partners" class="section section--top0">
     <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">{heads.partnersEyebrow}</span>
-        <h2>{heads.partnersTitle}</h2>
+      <div class="section-head pub-head">
+        <div>
+          <span class="eyebrow">{heads.partnersEyebrow}</span>
+          <h2>{heads.partnersTitle}</h2>
+        </div>
+        <a href="/partners" class="btn btn--ghost">All partners <Icon name="arrow" size={15} /></a>
       </div>
 
       <div class="partners">

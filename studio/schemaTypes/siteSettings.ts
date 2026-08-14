@@ -39,6 +39,7 @@ export default defineType({
     defineField({ name: 'showResearch', title: 'Show “Research” tab', type: 'boolean', group: 'menu', initialValue: true }),
     defineField({ name: 'showPublications', title: 'Show “Publications” tab', type: 'boolean', group: 'menu', initialValue: true }),
     defineField({ name: 'showMembers', title: 'Show “Members” tab', type: 'boolean', group: 'menu', initialValue: true }),
+    defineField({ name: 'showPartners', title: 'Show “Partners” tab', type: 'boolean', group: 'menu', initialValue: true }),
     defineField({ name: 'showNews', title: 'Show “News” tab', type: 'boolean', group: 'menu', initialValue: true }),
     defineField({ name: 'showOpportunities', title: 'Show “Opportunities” tab', type: 'boolean', group: 'menu', initialValue: true }),
     defineField({ name: 'showContact', title: 'Show “Contact” tab', type: 'boolean', group: 'menu', initialValue: true }),

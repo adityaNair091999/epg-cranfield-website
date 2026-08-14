@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { getPartners, getPageBanners } from '../lib/content';
+import { cdnImg } from '../lib/sanity';
+
+const [partners, banners] = await Promise.all([getPartners(), getPageBanners()]);
+---
+
+<Base title="Partners — Energy and Power Group">
+  <PageHero
+    eyebrow={banners.partnersEyebrow || 'Who We Work With'}
+    title={banners.partnersTitle || 'Partners & Collaborators'}
+    intro={banners.partnersIntro || 'The organisations, institutions and industry partners we collaborate with across our offshore renewable energy research.'}
+  />
+
+  <section class="section">
+    <div class="container">
+      {partners.length > 0 ? (
+        <div class="partnerlist">
+          {partners.map((p) => {
+            const tile = (
+              <>
+                <div class="partnertile__logo"><img src={cdnImg(p.logoUrl, 400)} alt={p.name} loading="lazy" /></div>
+                <span class="partnertile__name">{p.name}</span>
+              </>
+            );
+            return p.website
+              ? <a class="partnertile" href={p.website} target="_blank" rel="noopener noreferrer">{tile}</a>
+              : <div class="partnertile">{tile}</div>;
+          })}
+        </div>
+      ) : (
+        <p class="muted">Partners will be listed here soon.</p>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .partnerlist {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.25rem;
+  }
+  .partnertile {
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--white);
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  a.partnertile:hover { border-color: var(--accent); box-shadow: 0 2px 14px rgba(29, 31, 32, 0.08); }
+  .partnertile__logo {
+    display: flex; align-items: center; justify-content: center;
+    height: 90px; width: 100%;
+  }
+  .partnertile__logo img { max-width: 100%; max-height: 90px; width: auto; height: auto; object-fit: contain; }
+  .partnertile__name {
+    font-family: var(--font-head); font-weight: 600; font-size: 0.95rem; color: var(--ink);
+  }
+</style>

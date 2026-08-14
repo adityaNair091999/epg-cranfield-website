@@ -29,6 +29,8 @@ const hero = {
 };
 // Home videos — a curated list managed in Sanity (Home Page → Home videos).
 const homeVideos = (home.videos ?? []).filter((v) => v.url);
+// External links (DOIs, journal pages) open in a new tab; internal paths don't.
+const isExternal = (href?: string) => !!href && /^https?:\/\//i.test(href);
 
 const heads = {
   videosEyebrow: home.videosEyebrow || 'Watch',
@@ -159,10 +161,24 @@ const excerpt = (post: (typeof news)[number]) =>
               <span class="galleryrow__n mono">{String(i + 1).padStart(2, '0')}</span>
               {v.title && <h3>{v.title}</h3>}
               {v.description && <p>{v.description}</p>}
-              {(v.projectLink || v.papersLink) && (
+              {(v.projectLink || (v.papers && v.papers.length > 0)) && (
                 <div class="galleryrow__links">
-                  {v.projectLink && <a class="galleryrow__link" href={v.projectLink}>View project &rarr;</a>}
-                  {v.papersLink && <a class="galleryrow__link" href={v.papersLink}>Related paper(s) &rarr;</a>}
+                  {v.projectLink && (
+                    <a
+                      class="galleryrow__link"
+                      href={v.projectLink}
+                      target={isExternal(v.projectLink) ? '_blank' : undefined}
+                      rel={isExternal(v.projectLink) ? 'noopener noreferrer' : undefined}
+                    >View project &rarr;</a>
+                  )}
+                  {(v.papers ?? []).filter((p) => p.url).map((p) => (
+                    <a
+                      class="galleryrow__link"
+                      href={p.url}
+                      target={isExternal(p.url) ? '_blank' : undefined}
+                      rel={isExternal(p.url) ? 'noopener noreferrer' : undefined}
+                    >{p.label || 'Related paper'} &rarr;</a>
+                  ))}
                 </div>
               )}
             </div>

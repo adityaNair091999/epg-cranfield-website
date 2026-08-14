@@ -116,7 +116,7 @@ export interface HomePage {
     title?: string;
     description?: string;
     projectLink?: string;
-    papersLink?: string;
+    papers?: Array<{ _key?: string; label?: string; url?: string }>;
     caption?: string;
   }>;
   researchEyebrow?: string;

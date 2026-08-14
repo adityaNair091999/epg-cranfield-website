@@ -2,17 +2,16 @@
 import Base from '../layouts/Base.astro';
 import Corners from '../components/Corners.astro';
 import Icon from '../components/Icon.astro';
-import { getRecentNews, getFeaturedPublications, getMembers, getFeaturedProjects, getHomePage, getPartners } from '../lib/content';
+import { getRecentNews, getFeaturedPublications, getMembers, getFeaturedProjects, getHomePage } from '../lib/content';
 import { cdnImg } from '../lib/sanity';
 import VideoEmbed from '../components/VideoEmbed.astro';
 
-const [news, pubs, allMembers, projects, home, partners] = await Promise.all([
+const [news, pubs, allMembers, projects, home] = await Promise.all([
   getRecentNews(),
   getFeaturedPublications(),
   getMembers(),
   getFeaturedProjects(),
   getHomePage(),
-  getPartners(),
 ]);
 
 // Hero + section headings (editable in Sanity → "Home Page"), with fallbacks.
@@ -46,8 +45,6 @@ const heads = {
   publicationsTitle: home.publicationsTitle || 'Featured Publications',
   teamEyebrow: home.teamEyebrow || 'People',
   teamTitle: home.teamTitle || 'Meet the Team',
-  partnersEyebrow: home.partnersEyebrow || 'Who We Work With',
-  partnersTitle: home.partnersTitle || 'Partners & Collaborators',
 };
 
 // Team preview: current members only.
@@ -281,29 +278,6 @@ const excerpt = (post: (typeof news)[number]) =>
   </section>
   )}
 
-  <!-- ==================== PARTNERS & COLLABORATORS ==================== -->
-  {partners.length > 0 && (
-  <section id="partners" class="section section--top0">
-    <div class="container">
-      <div class="section-head pub-head">
-        <div>
-          <span class="eyebrow">{heads.partnersEyebrow}</span>
-          <h2>{heads.partnersTitle}</h2>
-        </div>
-        <a href="/partners" class="btn btn--ghost">All partners <Icon name="arrow" size={15} /></a>
-      </div>
-
-      <div class="partners">
-        {partners.map((p) => {
-          const logo = <img class="partner__logo" src={cdnImg(p.logoUrl, 320)} alt={p.name} loading="lazy" />;
-          return p.website
-            ? <a class="partner" href={p.website} target="_blank" rel="noopener noreferrer" title={p.name}>{logo}</a>
-            : <div class="partner" title={p.name}>{logo}</div>;
-        })}
-      </div>
-    </div>
-  </section>
-  )}
 </Base>
 
 <script define:vars={{ research }}>
@@ -382,23 +356,6 @@ const excerpt = (post: (typeof news)[number]) =>
   /* -------- RESEARCH -------- */
   .section--top0 { padding-top: 0; }
 
-  /* -------- PARTNERS & COLLABORATORS (linked logo tiles) -------- */
-  .partners { display: flex; flex-wrap: wrap; gap: 12px; }
-  .partner {
-    flex: 0 0 auto;
-    width: clamp(150px, 20vw, 200px);
-    min-height: 110px;
-    display: flex; align-items: center; justify-content: center;
-    padding: clamp(1rem, 2.5vw, 1.75rem);
-    background: var(--white);
-    border: 1px solid var(--border);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-  a.partner:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(29, 31, 32, 0.07); }
-  .partner__logo {
-    max-width: 100%; max-height: 60px; width: auto; height: auto;
-    object-fit: contain;
-  }
 
   /* -------- GALLERY (grid + expandable descriptions) -------- */
   .gallgrid { align-items: start; }

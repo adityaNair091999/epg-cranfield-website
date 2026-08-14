@@ -63,8 +63,7 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   videosEyebrow, videosTitle,
   "videos": videos[]{ _key, url, title, description, projectLink, papers[]{ _key, label, url }, caption },
   researchEyebrow, researchTitle, newsEyebrow, newsTitle,
-  publicationsEyebrow, publicationsTitle, teamEyebrow, teamTitle,
-  partnersEyebrow, partnersTitle
+  publicationsEyebrow, publicationsTitle, teamEyebrow, teamTitle
 }`;
 
 export const pageBannersQuery = `*[_type == "pageBanners"][0]`;

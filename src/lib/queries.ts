@@ -6,6 +6,10 @@ export const membersQuery = `*[_type == "member"] | order(current desc, startYea
   "photoUrl": photo.asset->url
 }`;
 
+export const partnersQuery = `*[_type == "partner"] | order(order asc, name asc){
+  _id, name, website, "logoUrl": logo.asset->url
+}`;
+
 export const publicationsQuery = `*[_type == "publication"] | order(year desc, title asc){
   _id, title, authors, journal, year, doi, abstract, bibtex, featured
 }`;
@@ -59,7 +63,8 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   videosEyebrow, videosTitle,
   "videos": videos[]{ _key, url, title, description, projectLink, papers[]{ _key, label, url }, caption },
   researchEyebrow, researchTitle, newsEyebrow, newsTitle,
-  publicationsEyebrow, publicationsTitle, teamEyebrow, teamTitle
+  publicationsEyebrow, publicationsTitle, teamEyebrow, teamTitle,
+  partnersEyebrow, partnersTitle
 }`;
 
 export const pageBannersQuery = `*[_type == "pageBanners"][0]`;

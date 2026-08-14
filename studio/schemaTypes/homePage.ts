@@ -44,6 +44,8 @@ export default defineType({
     defineField({ name: 'publicationsTitle', title: 'Publications — heading', type: 'string', group: 'sections', initialValue: 'Featured Publications' }),
     defineField({ name: 'teamEyebrow', title: 'Team — small line', type: 'string', group: 'sections', initialValue: 'People' }),
     defineField({ name: 'teamTitle', title: 'Team — heading', type: 'string', group: 'sections', initialValue: 'Meet the Team' }),
+    defineField({ name: 'partnersEyebrow', title: 'Partners — small line', type: 'string', group: 'sections', initialValue: 'Who We Work With' }),
+    defineField({ name: 'partnersTitle', title: 'Partners — heading', type: 'string', group: 'sections', initialValue: 'Partners & Collaborators' }),
   ],
   preview: { prepare: () => ({ title: 'Home Page' }) },
 });

@@ -8,7 +8,7 @@ const settings = await getSiteSettings();
 const toggles = settings as Record<string, boolean | undefined>;
 const allLinks = [
   { href: '/', label: 'Home', key: 'home' }, // always shown (no toggle)
-  { href: '/research', label: 'Research', key: 'showResearch' },
+  { href: '/research', label: 'Projects', key: 'showResearch' },
   { href: '/publications', label: 'Publications', key: 'showPublications' },
   { href: '/members', label: 'Members', key: 'showMembers' },
   { href: '/news', label: 'News', key: 'showNews' },

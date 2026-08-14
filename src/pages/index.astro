@@ -149,8 +149,19 @@ const excerpt = (post: (typeof news)[number]) =>
         <span class="eyebrow">{heads.videosEyebrow}</span>
         <h2>{heads.videosTitle}</h2>
       </div>
-      <div class="grid grid-3">
-        {homeVideos.map((v) => <VideoEmbed url={v.url!} caption={v.caption} />)}
+      <div class="galleryrows">
+        {homeVideos.map((v, i) => (
+          <article class:list={['galleryrow', { 'galleryrow--rev': i % 2 === 1 }]}>
+            <div class="galleryrow__video blueprint">
+              <VideoEmbed url={v.url!} />
+            </div>
+            <div class="galleryrow__text">
+              <span class="galleryrow__n mono">{String(i + 1).padStart(2, '0')}</span>
+              {v.title && <h3>{v.title}</h3>}
+              {v.description && <p>{v.description}</p>}
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   </section>
@@ -304,6 +315,30 @@ const excerpt = (post: (typeof news)[number]) =>
 
   /* -------- RESEARCH -------- */
   .section--top0 { padding-top: 0; }
+
+  /* -------- GALLERY (side-by-side feature rows) -------- */
+  .galleryrows { display: flex; flex-direction: column; gap: clamp(2.5rem, 5vw, 4rem); }
+  .galleryrow {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+  .galleryrow--rev { grid-template-columns: 0.85fr 1.15fr; }
+  .galleryrow--rev .galleryrow__video { order: 2; }
+  .galleryrow--rev .galleryrow__text { order: 1; }
+  .galleryrow__video { border: 1px solid var(--border); }
+  .galleryrow__n {
+    display: block; font-size: 1.5rem; font-weight: 600; color: var(--border);
+    letter-spacing: 0.05em; margin-bottom: 0.4rem;
+  }
+  .galleryrow__text h3 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); margin: 0 0 0.7rem; }
+  .galleryrow__text p { color: var(--text-dim); font-size: 1.02rem; margin: 0; max-width: 46ch; }
+  @media (max-width: 780px) {
+    .galleryrow, .galleryrow--rev { grid-template-columns: 1fr; gap: 1.2rem; }
+    .galleryrow--rev .galleryrow__video,
+    .galleryrow--rev .galleryrow__text { order: 0; }
+  }
   .research__card {
     text-align: left; font: inherit; cursor: pointer;
     background: transparent; border: 1px solid var(--border);

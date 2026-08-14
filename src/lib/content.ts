@@ -7,6 +7,7 @@
 import { sanityClient, isSanityConfigured } from './sanity';
 import {
   membersQuery,
+  partnersQuery,
   publicationsQuery,
   featuredPublicationsQuery,
   projectsQuery,
@@ -28,6 +29,7 @@ import {
 } from './sampleData';
 import type {
   Member,
+  Partner,
   Publication,
   Project,
   NewsPost,
@@ -58,6 +60,7 @@ async function load<T>(query: string, sample: T[], params?: Record<string, unkno
 }
 
 export const getMembers = () => load<Member>(membersQuery, sampleMembers);
+export const getPartners = () => load<Partner>(partnersQuery, []);
 export const getPublications = () => load<Publication>(publicationsQuery, samplePublications);
 export const getFeaturedPublications = () =>
   load<Publication>(featuredPublicationsQuery, samplePublications.filter((p) => p.featured).slice(0, 3));

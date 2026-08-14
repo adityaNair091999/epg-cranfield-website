@@ -51,6 +51,13 @@ export interface MediaItem {
   caption?: string;
 }
 
+export interface Partner {
+  _id: string;
+  name: string;
+  logoUrl: string;
+  website?: string;
+}
+
 export interface Project {
   _id: string;
   title: string;
@@ -127,6 +134,8 @@ export interface HomePage {
   publicationsTitle?: string;
   teamEyebrow?: string;
   teamTitle?: string;
+  partnersEyebrow?: string;
+  partnersTitle?: string;
 }
 
 /** Per-page banner text; keys like researchTitle, researchIntro, researchEyebrow. */

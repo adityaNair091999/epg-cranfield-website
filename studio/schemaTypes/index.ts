@@ -1,4 +1,5 @@
 import member from './member';
+import partner from './partner';
 import publication from './publication';
 import project from './project';
 import newsPost from './newsPost';
@@ -14,6 +15,7 @@ export const schemaTypes = [
   homePage,
   pageBanners,
   member,
+  partner,
   publication,
   project,
   newsPost,

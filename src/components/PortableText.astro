@@ -4,9 +4,14 @@
 import type { PortableTextBlock, PortableTextSpan } from '../lib/types';
 
 interface Props {
-  value: PortableTextBlock[];
+  value?: PortableTextBlock[] | null;
 }
-const { value = [] } = Astro.props;
+// Guard against a null/missing body (a post/opportunity with no content yet).
+// A default of `[]` only covers `undefined`, but Sanity returns `null` for an
+// empty field — iterating that would throw "value is not iterable" and crash
+// the page build, so coerce anything non-array to an empty list.
+const { value: rawValue } = Astro.props;
+const value: PortableTextBlock[] = Array.isArray(rawValue) ? rawValue : [];
 
 function renderSpans(children: PortableTextSpan[], markDefs: PortableTextBlock['markDefs'] = []) {
   return children

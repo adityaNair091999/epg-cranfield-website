@@ -39,9 +39,13 @@ export const apiVersion =
 // if the dataset is set to "private"; a public dataset reads without it.
 const token = readEnv('SANITY_API_TOKEN', 'SANITY_READ_TOKEN') || undefined;
 
-// Bypass Sanity's CDN cache with PUBLIC_SANITY_USE_CDN=false (or when a token is
-// present, so authenticated/fresh reads work as expected).
-const useCdn = readEnv('PUBLIC_SANITY_USE_CDN') !== 'false' && !token;
+// Read FRESH (uncached) data at build time so the site always reflects the very
+// latest published content. Sanity's CDN can lag for a short window after a
+// publish, and the auto-rebuild (triggered on publish) could read that stale
+// cache — which caused a just-added item (e.g. a 4th news post) to be missing
+// from the built site. Since we only fetch at build time, not per visitor, the
+// CDN gives no real benefit here. Opt back in with PUBLIC_SANITY_USE_CDN=true.
+const useCdn = readEnv('PUBLIC_SANITY_USE_CDN') === 'true' && !token;
 
 export const isSanityConfigured = projectId.length > 0;
 

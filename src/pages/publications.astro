@@ -8,10 +8,10 @@ const [pubs, banners] = await Promise.all([getPublications(), getPageBanners()])
 const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
 ---
 
-<Base title="Publications — Energy and Power Group">
+<Base title="Publication — Energy and Power Group">
   <PageHero
-    eyebrow={banners.publicationsEyebrow || 'Publications'}
-    title={banners.publicationsTitle || 'Publications'}
+    eyebrow={banners.publicationsEyebrow || 'Publication'}
+    title={banners.publicationsTitle || 'Publication'}
     intro={banners.publicationsIntro || 'Peer-reviewed journal papers and conference contributions from the group. Filter by year or search by title, author or journal.'}
   />
 

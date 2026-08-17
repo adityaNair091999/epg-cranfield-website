@@ -4,6 +4,7 @@ import Corners from '../components/Corners.astro';
 import Icon from '../components/Icon.astro';
 import { getRecentNews, getFeaturedPublications, getMembers, getFeaturedProjects, getHomePage } from '../lib/content';
 import { cdnImg } from '../lib/sanity';
+import { newsSlug } from '../lib/slug';
 import VideoEmbed from '../components/VideoEmbed.astro';
 
 const [news, pubs, allMembers, projects, home] = await Promise.all([
@@ -200,7 +201,7 @@ const excerpt = (post: (typeof news)[number]) =>
 
       <div class="grid grid-3">
         {news.map((post) => (
-          <a class="newscard blueprint" href={`/news/${post.slug}`}>
+          <a class="newscard blueprint" href={`/news/${newsSlug(post)}`}>
             <Corners />
             <div class="newscard__top">
               <span class="chip">News</span>

@@ -3,12 +3,13 @@ import Base from '../../layouts/Base.astro';
 import PortableText from '../../components/PortableText.astro';
 import { getNews } from '../../lib/content';
 import { cdnImg } from '../../lib/sanity';
+import { newsSlug } from '../../lib/slug';
 import type { NewsPost } from '../../lib/types';
 
 export async function getStaticPaths() {
   const news = await getNews();
   return news.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: newsSlug(post) },
     props: { post },
   }));
 }

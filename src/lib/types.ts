@@ -78,6 +78,7 @@ export interface NewsPost {
   slug: string;
   imageUrl?: string;
   body: PortableText;
+  link?: string;
 }
 
 export interface SiteSettings {

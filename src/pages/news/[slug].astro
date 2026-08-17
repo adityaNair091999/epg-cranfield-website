@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import PortableText from '../../components/PortableText.astro';
 import { getNews } from '../../lib/content';
 import { cdnImg } from '../../lib/sanity';
-import { newsSlug } from '../../lib/slug';
+import { newsSlug, newsLink } from '../../lib/slug';
 import type { NewsPost } from '../../lib/types';
 
 export async function getStaticPaths() {
@@ -38,6 +38,9 @@ const dateStr = new Date(post.date).toLocaleDateString('en-GB', {
       )}
       <div class="post__body">
         <PortableText value={post.body} />
+        {newsLink(post) && (
+          <a class="post__paper" href={newsLink(post)} target="_blank" rel="noopener noreferrer">Read the paper &rarr;</a>
+        )}
       </div>
     </div>
   </article>
@@ -52,4 +55,10 @@ const dateStr = new Date(post.date).toLocaleDateString('en-GB', {
   .post__body-wrap { padding-block: clamp(2.5rem, 6vw, 4rem); }
   .post__media { margin-bottom: 2rem; border: 1px solid var(--border); }
   .post__body { font-size: 1.08rem; }
+  .post__paper {
+    display: inline-block; margin-top: 1.5rem;
+    font-family: var(--font-head); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 0.85rem; color: var(--accent-dark);
+  }
+  .post__paper:hover { color: var(--accent-deep); text-decoration: underline; }
 </style>

@@ -30,17 +30,17 @@ export const projectsQuery = `*[_type == "project"] | order(featured desc, title
 export const featuredProjectsQuery = `*[_type == "project" && featured == true] | order(title asc)[0...3]{${projectFields}}`;
 
 export const newsQuery = `*[_type == "newsPost"] | order(date desc){
-  _id, title, date, "slug": slug.current, body,
+  _id, title, date, "slug": slug.current, body, link,
   "imageUrl": image.asset->url
 }`;
 
 export const recentNewsQuery = `*[_type == "newsPost"] | order(date desc)[0...3]{
-  _id, title, date, "slug": slug.current, body,
+  _id, title, date, "slug": slug.current, body, link,
   "imageUrl": image.asset->url
 }`;
 
 export const newsPostQuery = `*[_type == "newsPost" && slug.current == $slug][0]{
-  _id, title, date, "slug": slug.current, body,
+  _id, title, date, "slug": slug.current, body, link,
   "imageUrl": image.asset->url
 }`;
 

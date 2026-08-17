@@ -1,6 +1,7 @@
 ---
 import type { NewsPost } from '../lib/types';
 import { cdnImg } from '../lib/sanity';
+import { newsSlug } from '../lib/slug';
 interface Props { post: NewsPost; }
 const { post } = Astro.props;
 
@@ -13,7 +14,7 @@ const excerpt =
     ?.children?.map((c) => c.text).join('') ?? '';
 ---
 
-<a class="news card" href={`/news/${post.slug}`}>
+<a class="news card" href={`/news/${newsSlug(post)}`}>
   {post.imageUrl && (
     <div class="news__media"><img src={cdnImg(post.imageUrl, 800)} alt={post.title} loading="lazy" /></div>
   )}

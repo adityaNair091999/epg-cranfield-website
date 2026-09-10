@@ -85,6 +85,7 @@ export interface SiteSettings {
   // brand
   groupName?: string;
   groupShortName?: string;
+  logoUrl?: string;
   university?: string;
   navCtaLabel?: string;
   navCtaLink?: string;

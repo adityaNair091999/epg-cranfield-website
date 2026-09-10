@@ -1,6 +1,7 @@
 ---
 import Corners from './Corners.astro';
 import { getSiteSettings } from '../lib/content';
+import { cdnImg } from '../lib/sanity';
 
 // Menu tabs — each can be hidden from Sanity's "Site Settings" (a value of
 // exactly false hides it; anything else shows it).
@@ -21,6 +22,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const groupName = settings.groupName || 'Energy and Power Group';
 const shortName = settings.groupShortName || 'EPG';
+const logoUrl = settings.logoUrl || '';
 const university = settings.university || 'Cranfield University';
 const ctaLabel = settings.navCtaLabel || 'Explore Our Research';
 const ctaLink = settings.navCtaLink || '/research';
@@ -29,10 +31,14 @@ const ctaLink = settings.navCtaLink || '/research';
 <header class="nav">
   <div class="container nav__inner">
     <a class="nav__brand" href="/">
-      <span class="nav__mark blueprint">
-        <Corners />
-        {shortName}
-      </span>
+      {logoUrl
+        ? <img class="nav__logo" src={cdnImg(logoUrl, 200)} alt={groupName} />
+        : (
+          <span class="nav__mark blueprint">
+            <Corners />
+            {shortName}
+          </span>
+        )}
       <span class="nav__name">
         {groupName}
         <small>{university}</small>
@@ -76,6 +82,7 @@ const ctaLink = settings.navCtaLink || '/research';
     padding-block: 12px;
   }
   .nav__brand { display: flex; align-items: center; gap: 12px; margin-right: auto; color: var(--ink); }
+  .nav__logo { height: 40px; width: auto; max-width: 180px; object-fit: contain; display: block; }
   .nav__mark {
     display: inline-flex; align-items: center; justify-content: center;
     width: 34px; height: 34px; border: 1px solid var(--border);

@@ -50,6 +50,7 @@ export const opportunitiesQuery = `*[_type == "opportunity"] | order(open desc, 
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   groupName, groupShortName, university, navCtaLabel, navCtaLink,
+  "logoUrl": logo.asset->url,
   addressLines, email, phone, groupLeadName, groupLeadRole, charityLine, mapEmbedUrl,
   showResearch, showPublications, showMembers, showPartners, showNews, showOpportunities, showContact
 }`;

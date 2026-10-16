@@ -10,5 +10,3 @@ export default defineConfig({
     format: 'directory',
   },
 });
-
-// deployed at 2026-10-16T09:59Z

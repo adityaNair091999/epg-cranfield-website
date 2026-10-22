@@ -7,11 +7,11 @@ import { getNews, getPageBanners } from '../lib/content';
 const [news, banners] = await Promise.all([getNews(), getPageBanners()]);
 ---
 
-<Base title="News — Energy and Power Group">
+<Base title="News — MAPLE">
   <PageHero
     eyebrow={banners.newsEyebrow || 'News'}
     title={banners.newsTitle || 'News & Updates'}
-    intro={banners.newsIntro || 'Announcements, publications, events and milestones from the Energy and Power Group.'}
+    intro={banners.newsIntro || 'Announcements, publications, events and milestones from MAPLE.'}
   />
 
   <section class="section">

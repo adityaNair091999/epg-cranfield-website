@@ -13,14 +13,14 @@ export default defineType({
   ],
   fields: [
     // ---- Brand ----
-    defineField({ name: 'groupName', title: 'Group name', type: 'string', group: 'brand', initialValue: 'Energy and Power Group' }),
-    defineField({ name: 'groupShortName', title: 'Short name / logo text', type: 'string', group: 'brand', initialValue: 'EPG' }),
+    defineField({ name: 'groupName', title: 'Group name', type: 'string', group: 'brand', initialValue: 'MAPLE' }),
+    defineField({ name: 'groupShortName', title: 'Short name / logo text', type: 'string', group: 'brand', initialValue: 'MAPLE' }),
     defineField({
       name: 'logo',
       title: 'Logo (optional)',
       type: 'image',
       group: 'brand',
-      description: 'The research group logo, shown in the header. PNG or SVG with a transparent background works best. If left empty, the “EPG” text mark is shown instead.',
+      description: 'The research group logo, shown in the header. PNG or SVG with a transparent background works best. If left empty, the “MAPLE” text mark is shown instead.',
     }),
     defineField({ name: 'university', title: 'University / institution', type: 'string', group: 'brand', initialValue: 'Cranfield University' }),
     defineField({ name: 'navCtaLabel', title: 'Menu button label', type: 'string', group: 'brand', initialValue: 'Explore Our Research' }),

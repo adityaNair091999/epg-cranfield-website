@@ -23,7 +23,7 @@ const web3key =
   '';
 ---
 
-<Base title="Contact — Energy and Power Group">
+<Base title="Contact — MAPLE">
   <PageHero
     eyebrow={banners.contactEyebrow || 'Get in Touch'}
     title={banners.contactTitle || 'Contact'}
@@ -68,8 +68,8 @@ const web3key =
         {web3key ? (
           <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
             <input type="hidden" name="access_key" value={web3key} />
-            <input type="hidden" name="subject" value="New message from the EPG website" />
-            <input type="hidden" name="from_name" value="EPG Website" />
+            <input type="hidden" name="subject" value="New message from the MAPLE website" />
+            <input type="hidden" name="from_name" value="MAPLE Website" />
             <!-- honeypot (spam trap) -->
             <input type="checkbox" name="botcheck" class="hidden-field" tabindex="-1" autocomplete="off" />
 

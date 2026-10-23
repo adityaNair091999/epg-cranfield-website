@@ -29,6 +29,14 @@ const res = await syncPublications({
 });
 
 console.log(`[sync] existing=${res.existing} openalex=${res.fetched} dryRun=${res.dryRun}`);
+if (res.migrated.length) {
+  console.log(`[sync] ${res.dryRun ? 'would make visible' : 'made visible'}: ${res.migrated.length} hidden publication(s)`);
+  for (const m of res.migrated) console.log(`   ~ ${m.from} -> ${m.to}  ${(m.title || '').slice(0, 70)}`);
+}
 console.log(`[sync] ${res.dryRun ? 'would add' : 'added'}: ${res.added.length} publication(s)`);
 for (const a of res.added) console.log(`   + ${a.year || '----'}  ${a.title.slice(0, 90)}`);
-if (res.dryRun) console.log('[sync] DRY RUN — nothing written. Set SANITY_WRITE_TOKEN to apply.');
+if (res.dryRun) {
+  console.log(token
+    ? '[sync] DRY RUN — nothing written (untick "dry run" to apply).'
+    : '[sync] DRY RUN — nothing written. Set SANITY_WRITE_TOKEN to apply.');
+}

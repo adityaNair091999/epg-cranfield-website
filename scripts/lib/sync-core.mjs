@@ -18,13 +18,20 @@ function reconstructAbstract(inv) {
   return words.join(' ').replace(/\s+/g, ' ').trim();
 }
 
-async function sanityQuery({ projectId, dataset, apiVersion }, query) {
+// Authenticated when a token is given, so it also sees documents that public
+// reads can't (e.g. any whose _id contains a dot).
+async function sanityQuery({ projectId, dataset, apiVersion, token }, query) {
   const url = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`
     + `?query=${encodeURIComponent(query)}`;
-  const r = await fetch(url);
+  const r = await fetch(url, token ? { headers: { Authorization: `Bearer ${token}` } } : undefined);
   if (!r.ok) throw new Error(`Sanity query failed: ${r.status}`);
   return (await r.json()).result;
 }
+
+// IDs must not contain dots: Sanity treats dotted IDs as private (like drafts),
+// so public reads — including the website build — can't see them.
+const docId = (openAlexUrl) => `pub-oa-${(openAlexUrl || '').replace(/^https?:\/\/openalex\.org\//, '')}`;
+const SYSTEM_FIELDS = new Set(['_id', '_rev', '_createdAt', '_updatedAt']);
 
 async function sanityMutate({ projectId, dataset, apiVersion, token }, mutations) {
   const url = `https://${projectId}.api.sanity.io/v${apiVersion}/data/mutate/${dataset}`;
@@ -81,7 +88,24 @@ export async function syncPublications(opts = {}) {
   const mailto = opts.mailto || 'luofeng.huang@cranfield.ac.uk';
   const dryRun = opts.dryRun ?? !cfg.token;
 
-  const existing = await sanityQuery(cfg, `*[_type == "publication"]{ _id, doi, title }`);
+  // One-time repair: earlier versions created IDs like "pub.oa.W123", which are
+  // hidden from public reads. Move each to a visible "pub-oa-W123" ID.
+  const hidden = cfg.token
+    ? await sanityQuery(cfg, `*[_type == "publication" && _id in path("pub.oa.**")]`)
+    : [];
+  const migrated = hidden.map((d) => ({ from: d._id, to: `pub-oa-${d._id.slice('pub.oa.'.length)}`, title: d.title }));
+  if (!dryRun && hidden.length) {
+    const mutations = [];
+    for (const d of hidden) {
+      const doc = Object.fromEntries(Object.entries(d).filter(([k]) => !SYSTEM_FIELDS.has(k)));
+      mutations.push({ createIfNotExists: { ...doc, _id: `pub-oa-${d._id.slice('pub.oa.'.length)}` } });
+      mutations.push({ delete: { id: d._id } });
+    }
+    await sanityMutate(cfg, mutations);
+  }
+
+  const existing = (await sanityQuery(cfg, `*[_type == "publication"]{ _id, doi, title }`))
+    .filter((p) => !p._id.startsWith('drafts.'));
   const existDoi = new Set(existing.map((p) => normDoi(p.doi)).filter(Boolean));
   const existTitle = new Set(existing.map((p) => norm(p.title)).filter(Boolean));
 
@@ -102,7 +126,7 @@ export async function syncPublications(opts = {}) {
     seenTitle.add(t);
 
     toCreate.push({
-      _id: `pub.oa.${(w.id || '').replace(/^https?:\/\/openalex\.org\//, '')}`,
+      _id: docId(w.id),
       _type: 'publication',
       title,
       authors: (w.authorships || []).map((a) => a.author?.display_name).filter(Boolean),
@@ -118,6 +142,7 @@ export async function syncPublications(opts = {}) {
     existing: existing.length,
     fetched: works.length,
     added: toCreate.map((c) => ({ title: c.title, year: c.year })),
+    migrated,
     dryRun,
   };
 

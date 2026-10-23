@@ -1,0 +1,33 @@
+name: Sync publications (OpenAlex → Sanity)
+
+# Adds any NEW publications from OpenAlex to Sanity. Never edits/overwrites
+# existing entries, so manual corrections are preserved.
+#
+# Requires a repository secret SANITY_WRITE_TOKEN (a Sanity "Editor" token).
+# Create it at sanity.io/manage → project → API → Tokens, then add it under
+# GitHub repo → Settings → Secrets and variables → Actions → New repository secret.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (list new papers only, write nothing)'
+        type: boolean
+        default: true
+  schedule:
+    - cron: '0 3 1 * *' # 03:00 UTC on the 1st of each month
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - name: Run additive publication sync
+        env:
+          SANITY_WRITE_TOKEN: ${{ secrets.SANITY_WRITE_TOKEN }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+        run: node scripts/sync-publications.mjs

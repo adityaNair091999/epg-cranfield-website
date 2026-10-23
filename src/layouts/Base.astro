@@ -22,7 +22,13 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- "?v=2" gives the icons new URLs so Google/browsers drop the old EPG icon. -->
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-48.png?v=2" type="image/png" sizes="48x48" />
+    <link rel="icon" href="/favicon-96.png?v=2" type="image/png" sizes="96x96" />
+    <link rel="icon" href="/favicon-192.png?v=2" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />

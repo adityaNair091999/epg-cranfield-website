@@ -1,0 +1,16 @@
+# Small standalone Worker that runs the additive publication sync on demand.
+# The "Sync publications" button in Sanity Studio POSTs to it.
+#
+# Deploy (from this folder):  npx wrangler deploy
+# Set its secrets after first deploy:
+#   npx wrangler secret put SANITY_WRITE_TOKEN   # a Sanity Editor token
+#   npx wrangler secret put TRIGGER_SECRET        # any random string (optional gate)
+#
+# Public vars (edit as needed):
+name = "maple-pubsync"
+main = "src/index.mjs"
+compatibility_date = "2025-01-01"
+
+[vars]
+# Lock cross-origin calls to the Studio. Use "*" to allow any origin.
+ALLOWED_ORIGIN = "https://energy-power-cranfield.sanity.studio"

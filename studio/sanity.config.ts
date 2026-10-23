@@ -2,6 +2,7 @@ import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './schemaTypes';
+import { SyncPublicationsTool } from './tools/SyncPublicationsTool';
 
 // "Site Settings" is a singleton: exactly one document, not a list you add to.
 const SINGLETON_TYPES = new Set(['siteSettings', 'homePage', 'pageBanners']);
@@ -10,7 +11,7 @@ const SINGLETON_ACTIONS = new Set(['publish', 'discardChanges', 'restore']);
 // The project ID and dataset come from environment variables. See studio/.env.
 export default defineConfig({
   name: 'default',
-  title: 'Energy and Power Group',
+  title: 'MAPLE',
 
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'REPLACE_WITH_PROJECT_ID',
   dataset: process.env.SANITY_STUDIO_DATASET || 'production',
@@ -36,6 +37,12 @@ export default defineConfig({
           ]),
     }),
     visionTool(),
+  ],
+
+  // Adds a "Sync Publications" page to the Studio top bar (the one-click button).
+  tools: (prev) => [
+    ...prev,
+    { name: 'sync-publications', title: 'Sync Publications', component: SyncPublicationsTool },
   ],
 
   schema: {

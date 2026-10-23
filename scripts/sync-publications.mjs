@@ -84,6 +84,11 @@ async function main() {
     const title = (w.display_name || w.title || '').trim();
     if (!title) continue;
     const doi = normDoi(w.doi);
+    // Require a DOI. Real journal/conference papers have one; the DOI-less
+    // records OpenAlex returns are repository copies / grey literature that
+    // duplicate a real (DOI'd) paper, often under a slightly different title —
+    // which would otherwise slip past title de-dup and create a duplicate.
+    if (!doi) continue;
     const tnorm = norm(title);
 
     // Skip anything already in Sanity (by DOI, else by title) — never touch it.

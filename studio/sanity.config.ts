@@ -2,7 +2,6 @@ import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './schemaTypes';
-import { SyncPublicationsTool } from './tools/SyncPublicationsTool';
 
 // "Site Settings" is a singleton: exactly one document, not a list you add to.
 const SINGLETON_TYPES = new Set(['siteSettings', 'homePage', 'pageBanners']);
@@ -37,12 +36,6 @@ export default defineConfig({
           ]),
     }),
     visionTool(),
-  ],
-
-  // Adds a "Sync Publications" page to the Studio top bar (the one-click button).
-  tools: (prev) => [
-    ...prev,
-    { name: 'sync-publications', title: 'Sync Publications', component: SyncPublicationsTool },
   ],
 
   schema: {

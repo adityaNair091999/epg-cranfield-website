@@ -37,15 +37,29 @@ async function sanityMutate({ projectId, dataset, apiVersion, token }, mutations
   return r.json();
 }
 
+// Fetch JSON with a few retries on transient rate-limits / server errors.
+async function fetchJsonRetry(url, tries = 4) {
+  let last = 0;
+  for (let i = 0; i < tries; i++) {
+    const r = await fetch(url);
+    if (r.ok) return r.json();
+    last = r.status;
+    if ((r.status === 429 || r.status >= 500) && i < tries - 1) {
+      await new Promise((res) => setTimeout(res, 2000 * (i + 1)));
+      continue;
+    }
+    break;
+  }
+  throw new Error(`OpenAlex request failed: ${last}`);
+}
+
 async function fetchOpenAlexWorks(authorId, mailto) {
   const works = [];
   let cursor = '*';
   while (cursor) {
     const url = `https://api.openalex.org/works?filter=author.id:${authorId}`
       + `&per-page=200&cursor=${encodeURIComponent(cursor)}&mailto=${encodeURIComponent(mailto)}`;
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(`OpenAlex request failed: ${r.status}`);
-    const j = await r.json();
+    const j = await fetchJsonRetry(url);
     works.push(...(j.results || []));
     cursor = j.meta?.next_cursor;
     if (!j.results?.length) break;

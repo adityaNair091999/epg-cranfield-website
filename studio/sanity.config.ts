@@ -10,7 +10,7 @@ const SINGLETON_ACTIONS = new Set(['publish', 'discardChanges', 'restore']);
 // The project ID and dataset come from environment variables. See studio/.env.
 export default defineConfig({
   name: 'default',
-  title: 'MAPLE',
+  title: 'MAPLE Research Group',
 
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'REPLACE_WITH_PROJECT_ID',
   dataset: process.env.SANITY_STUDIO_DATASET || 'production',

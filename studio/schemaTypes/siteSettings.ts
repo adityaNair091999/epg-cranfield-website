@@ -13,7 +13,7 @@ export default defineType({
   ],
   fields: [
     // ---- Brand ----
-    defineField({ name: 'groupName', title: 'Group name', type: 'string', group: 'brand', initialValue: 'MAPLE' }),
+    defineField({ name: 'groupName', title: 'Group name', type: 'string', group: 'brand', initialValue: 'MAPLE Research Group' }),
     defineField({ name: 'groupShortName', title: 'Short name / logo text', type: 'string', group: 'brand', initialValue: 'MAPLE' }),
     defineField({
       name: 'logo',

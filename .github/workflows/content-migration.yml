@@ -1,0 +1,38 @@
+name: Content migration (Sanity)
+
+# Runs a one-off Sanity content migration from scripts/migrations/.
+# - On a pull request that changes a migration: DRY RUN only, so the PR check
+#   log shows exactly what would change (nothing is written).
+# - Manually (Actions → Content migration → Run workflow): untick "dry run" to apply.
+# Uses the same repository secret as the publication sync: SANITY_WRITE_TOKEN.
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/migrations/**'
+  workflow_dispatch:
+    inputs:
+      migration:
+        description: 'Migration to run'
+        type: choice
+        options:
+          - maple-research-group
+        default: maple-research-group
+      dry_run:
+        description: 'Dry run (show changes, write nothing)'
+        type: boolean
+        default: true
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run migration
+        env:
+          SANITY_WRITE_TOKEN: ${{ secrets.SANITY_WRITE_TOKEN }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run && 'false' || 'true' }}
+        run: node scripts/migrations/${{ inputs.migration || 'maple-research-group' }}.mjs

@@ -4,7 +4,7 @@ import Corners from '../components/Corners.astro';
 import Icon from '../components/Icon.astro';
 import { getRecentNews, getFeaturedPublications, getMembers, getFeaturedProjects, getHomePage } from '../lib/content';
 import { cdnImg } from '../lib/sanity';
-import { newsSlug } from '../lib/slug';
+import { newsSlug, pageHref } from '../lib/slug';
 import VideoEmbed from '../components/VideoEmbed.astro';
 
 const [news, pubs, allMembers, projects, home] = await Promise.all([
@@ -21,9 +21,9 @@ const hero = {
   heading: home.heroHeading || 'Marine and AI systems',
   tagline: home.heroTagline || 'Engineering the offshore energy systems of the next century.',
   primaryLabel: home.heroPrimaryLabel || 'Explore Our Research',
-  primaryLink: home.heroPrimaryLink || '/research',
+  primaryLink: pageHref(home.heroPrimaryLink || '/research/'),
   secondaryLabel: home.heroSecondaryLabel || 'View Publications',
-  secondaryLink: home.heroSecondaryLink || '/publications',
+  secondaryLink: pageHref(home.heroSecondaryLink || '/publications/'),
   imageUrl: home.heroImageUrl || '/samples/hero-fpv.svg',
   videoUrl: home.heroVideoUrl || '',
   // No fallback: if the editor clears "Image/video caption" in Sanity, the
@@ -168,7 +168,7 @@ const excerpt = (post: (typeof news)[number]) =>
                 {v.projectLink && (
                   <a
                     class="gallcard__link"
-                    href={v.projectLink}
+                    href={pageHref(v.projectLink)}
                     target={isExternal(v.projectLink) ? '_blank' : undefined}
                     rel={isExternal(v.projectLink) ? 'noopener noreferrer' : undefined}
                   >View project &rarr;</a>
@@ -176,7 +176,7 @@ const excerpt = (post: (typeof news)[number]) =>
                 {(v.papers ?? []).filter((p) => p.url).map((p) => (
                   <a
                     class="gallcard__link"
-                    href={p.url}
+                    href={pageHref(p.url)}
                     target={isExternal(p.url) ? '_blank' : undefined}
                     rel={isExternal(p.url) ? 'noopener noreferrer' : undefined}
                   >{p.label || 'Related paper'} &rarr;</a>
@@ -201,7 +201,7 @@ const excerpt = (post: (typeof news)[number]) =>
 
       <div class="grid grid-3">
         {news.map((post) => (
-          <a class="newscard blueprint" href={`/news/${newsSlug(post)}`}>
+          <a class="newscard blueprint" href={`/news/${newsSlug(post)}/`}>
             <Corners />
             <div class="newscard__top">
               <span class="chip">News</span>
@@ -226,7 +226,7 @@ const excerpt = (post: (typeof news)[number]) =>
           <span class="eyebrow">{heads.publicationsEyebrow}</span>
           <h2>{heads.publicationsTitle}</h2>
         </div>
-        <a href="/publications" class="btn btn--ghost">All publications <Icon name="arrow" size={15} /></a>
+        <a href="/publications/" class="btn btn--ghost">All publications <Icon name="arrow" size={15} /></a>
       </div>
 
       <div class="publist">
@@ -257,12 +257,12 @@ const excerpt = (post: (typeof news)[number]) =>
           <span class="eyebrow">{heads.teamEyebrow}</span>
           <h2>{heads.teamTitle}</h2>
         </div>
-        <a href="/members" class="btn btn--ghost">All members <Icon name="arrow" size={15} /></a>
+        <a href="/members/" class="btn btn--ghost">All members <Icon name="arrow" size={15} /></a>
       </div>
 
       <div class="grid grid-5 team">
         {members.slice(0, 10).map((m) => (
-          <a class="teamcard" href="/members">
+          <a class="teamcard" href="/members/">
             <div class="teamcard__photo blueprint">
               <div class="duotone teamcard__media">
                 {m.photoUrl

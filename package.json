@@ -12,6 +12,7 @@
     "sync:pubs": "node scripts/sync-publications.mjs"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
     "@fontsource/barlow": "^5.1.0",
     "@fontsource/barlow-condensed": "^5.1.0",
     "@sanity/client": "^6.24.1",

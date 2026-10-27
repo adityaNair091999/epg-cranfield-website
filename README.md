@@ -1,6 +1,6 @@
-# Energy and Power Group — Website
+# MAPLE Research Group — Website
 
-The official website for the **Energy and Power Group** at Cranfield University,
+The official website for the **MAPLE Research Group** at Cranfield University,
 led by **Dr. Luofeng Huang**. The group researches offshore renewable energy —
 floating photovoltaics, wave–structure interaction and computational fluid
 dynamics.
@@ -8,13 +8,16 @@ dynamics.
 This README is written so that **anyone** — including non-technical staff — can
 run, edit and publish the website. Follow the steps in order.
 
+> **Taking over the site?** [HANDOVER.md](HANDOVER.md) lists every account and
+> setting behind it and how to transfer each one.
+
 ---
 
 ## Live site & key links
 
 | What | Address |
 | --- | --- |
-| **Live website** | https://epg-cranfield-website.aditya-nair2-817.workers.dev |
+| **Live website** | https://www.maple-research.uk |
 | **Content editor (Sanity Studio)** | https://energy-power-cranfield.sanity.studio |
 | **Manage content account** | https://www.sanity.io/manage |
 | **Hosting dashboard (Cloudflare)** | https://dash.cloudflare.com → Workers & Pages → `epg-cranfield-website` |
@@ -28,8 +31,8 @@ click **Publish** → the website updates automatically within about a minute.
 
 ## 1. Project overview
 
-The website has seven pages: **Home, Research, Publications, Members, News,
-Opportunities** and **Contact**. It is designed in a clean, bold "industrial"
+The website has eight pages: **Home, Projects, Publications, Members, Partners,
+News, Opportunities** and **Contact**. It is designed in a clean, bold "industrial"
 engineering style.
 
 All the *content* (people, papers, projects, news, jobs) is stored in a friendly
@@ -224,20 +227,26 @@ the configuration is:
 
   | Key | Value |
   | --- | --- |
-  | `SANITY_PROJECT_ID` | your Sanity project ID (`7hpg0m0e`) |
-  | `SANITY_DATASET` | `production` |
+  | `PUBLIC_SANITY_PROJECT_ID` | your Sanity project ID (`7hpg0m0e`) |
+  | `PUBLIC_SANITY_DATASET` | `production` |
+  | `PUBLIC_SANITY_API_VERSION` | `2024-01-01` |
   | `PUBLIC_WEB3FORMS_ACCESS_KEY` | your Web3Forms key (for the contact form) |
 
 ### Two ways the live site updates
 
 1. **Code changes** → automatic. When code is pushed to GitHub's `main` branch,
    Cloudflare rebuilds and redeploys on its own.
-2. **Content changes in Sanity** → the site is built ahead of time, so it needs a
-   rebuild to show new content. Either:
-   - **Simplest:** in Cloudflare, open the project → **Create deployment / Retry**
-     to rebuild after publishing in Sanity, **or**
-   - **Automatic:** connect a Cloudflare **deploy hook** to a Sanity **webhook**
-     (see Part B6) so every publish rebuilds the site by itself.
+2. **Content changes in Sanity** → automatic. The site is built ahead of time,
+   so a Sanity **webhook** calls a Cloudflare **deploy hook** on every publish
+   and the site rebuilds by itself (set up as described in Part B6). If a change
+   ever doesn't appear, open the project in Cloudflare → **Deployments** and
+   retry the latest build.
+3. **Pull requests** → Cloudflare builds a **preview** copy of the site for each
+   PR and posts the link on the PR, so changes can be checked before merging.
+
+New publications are also **added automatically** once a day from OpenAlex by a
+GitHub Action (it never edits existing entries). See
+[scripts/README.md](scripts/README.md).
 
 ### Connecting Sanity to the site locally
 
@@ -246,7 +255,15 @@ in the values, then run `npm run dev`.
 
 ---
 
-## 9. How to connect a custom domain (e.g. energypower.cranfield.ac.uk)
+## 9. Custom domain
+
+The site's address is **www.maple-research.uk** (the bare `maple-research.uk`
+also works). The domain was bought through **Cloudflare Registrar** in the live
+Cloudflare account and renews yearly. Cloudflare provides HTTPS automatically,
+and **Always Use HTTPS** is on. See [HANDOVER.md](HANDOVER.md) for ownership and
+renewal.
+
+To add another domain in future:
 
 1. Get a domain — either ask **Cranfield IT** for a `*.cranfield.ac.uk`
    subdomain (free, most official), or buy one (cheapest via **Cloudflare
@@ -421,10 +438,9 @@ the Sanity webhook and that the trigger types are ticked.
 A few small things keep the site healthy. Once a year (put a reminder in the
 calendar) check:
 
-- [ ] **Domain renewal** — if you use a custom web address (e.g.
-      `energypower.cranfield.ac.uk`), make sure it is renewed/still pointing at
-      Cloudflare. University web addresses are usually handled by Cranfield IT —
-      confirm with them.
+- [ ] **Domain renewal** — `maple-research.uk` renews yearly through Cloudflare
+      Registrar (Cloudflare → Domain Registration). Check auto-renew is on and the
+      payment card on file is still valid.
 - [ ] **Cloudflare account** — log in at <https://dash.cloudflare.com> once so the
       free account stays active; check the project still deploys successfully. The
       Cloudflare free tier is very generous and a small site stays well within it.
@@ -459,6 +475,7 @@ calendar) check:
 | Open the content editor             | `npm run dev` (in `website/studio/`)     |
 | Load sample content into Sanity     | `npm run import-sample` (in `studio/`)   |
 | Publish the content editor online   | `npm run deploy` (in `website/studio/`)  |
+| Check for new publications (dry run)| `npm run sync:pubs` (in `website/`)      |
 
 ---
 

@@ -6,12 +6,12 @@ const settings = await getSiteSettings();
 const toggles = settings as Record<string, boolean | undefined>;
 const allLinks = [
   { href: '/', label: 'Home', key: 'home' }, // always shown
-  { href: '/research', label: 'Projects', key: 'showResearch' },
-  { href: '/publications', label: 'Publications', key: 'showPublications' },
-  { href: '/members', label: 'Members', key: 'showMembers' },
-  { href: '/partners', label: 'Partners', key: 'showPartners' },
-  { href: '/news', label: 'News', key: 'showNews' },
-  { href: '/opportunities', label: 'Opportunities', key: 'showOpportunities' },
+  { href: '/research/', label: 'Projects', key: 'showResearch' },
+  { href: '/publications/', label: 'Publications', key: 'showPublications' },
+  { href: '/members/', label: 'Members', key: 'showMembers' },
+  { href: '/partners/', label: 'Partners', key: 'showPartners' },
+  { href: '/news/', label: 'News', key: 'showNews' },
+  { href: '/opportunities/', label: 'Opportunities', key: 'showOpportunities' },
 ];
 const links = allLinks.filter((l) => toggles[l.key] !== false);
 
@@ -55,7 +55,7 @@ const charityLine = settings.charityLine || 'Cranfield University is a registere
         <div class="footer__links">
           <span>{leadName}</span>
           <span class="footer__dim">{leadRole}</span>
-          <a href="/contact">Get in touch &rarr;</a>
+          <a href="/contact/">Get in touch &rarr;</a>
         </div>
       </div>
     </div>

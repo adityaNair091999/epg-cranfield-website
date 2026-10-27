@@ -28,7 +28,7 @@ const videos = (project.gallery ?? []).filter((m) => m._type === 'videoEmbed' &&
   <article class="project">
     <div class="project__hero">
       <div class="container">
-        <a href="/research" class="project__back mono">&larr; All research</a>
+        <a href="/research/" class="project__back mono">&larr; All research</a>
         <span class:list={['chip', project.status === 'ongoing' ? 'chip--ongoing' : 'chip--completed', 'project__status']}>{project.status}</span>
         <h1>{project.title}</h1>
         {project.description && <p class="project__lead">{project.description}</p>}

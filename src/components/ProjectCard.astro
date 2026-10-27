@@ -5,7 +5,7 @@ import { projectSlug } from '../lib/slug';
 import Icon from './Icon.astro';
 interface Props { project: Project; }
 const { project } = Astro.props;
-const href = `/research/${projectSlug(project)}`;
+const href = `/research/${projectSlug(project)}/`;
 ---
 
 <article class="project card">

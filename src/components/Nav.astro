@@ -2,6 +2,7 @@
 import Corners from './Corners.astro';
 import { getSiteSettings } from '../lib/content';
 import { cdnImg } from '../lib/sanity';
+import { pageHref } from '../lib/slug';
 
 // Menu tabs — each can be hidden from Sanity's "Site Settings" (a value of
 // exactly false hides it; anything else shows it).
@@ -9,23 +10,24 @@ const settings = await getSiteSettings();
 const toggles = settings as Record<string, boolean | undefined>;
 const allLinks = [
   { href: '/', label: 'Home', key: 'home' }, // always shown (no toggle)
-  { href: '/research', label: 'Projects', key: 'showResearch' },
-  { href: '/publications', label: 'Publications', key: 'showPublications' },
-  { href: '/members', label: 'Members', key: 'showMembers' },
-  { href: '/partners', label: 'Partners', key: 'showPartners' },
-  { href: '/news', label: 'News', key: 'showNews' },
-  { href: '/opportunities', label: 'Opportunities', key: 'showOpportunities' },
-  { href: '/contact', label: 'Contact', key: 'showContact' },
+  { href: '/research/', label: 'Projects', key: 'showResearch' },
+  { href: '/publications/', label: 'Publications', key: 'showPublications' },
+  { href: '/members/', label: 'Members', key: 'showMembers' },
+  { href: '/partners/', label: 'Partners', key: 'showPartners' },
+  { href: '/news/', label: 'News', key: 'showNews' },
+  { href: '/opportunities/', label: 'Opportunities', key: 'showOpportunities' },
+  { href: '/contact/', label: 'Contact', key: 'showContact' },
 ];
 const links = allLinks.filter((l) => toggles[l.key] !== false);
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+// Current page as "/news/" (with trailing slash), to match the menu links.
+const path = Astro.url.pathname.replace(/\/?$/, '/');
 
 const groupName = settings.groupName || 'MAPLE Research Group';
 const shortName = settings.groupShortName || 'MAPLE';
 const logoUrl = settings.logoUrl || '';
 const university = settings.university || 'Cranfield University';
 const ctaLabel = settings.navCtaLabel || 'Explore Our Research';
-const ctaLink = settings.navCtaLink || '/research';
+const ctaLink = pageHref(settings.navCtaLink || '/research/');
 ---
 
 <header class="nav">

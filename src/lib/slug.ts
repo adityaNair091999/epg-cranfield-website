@@ -7,6 +7,25 @@ export function slugify(input: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+/**
+ * Normalise an internal link to the page's official address, which always ends
+ * in "/" (e.g. "/news" -> "/news/", "/research#x" -> "/research/#x"). Pages are
+ * served from "/news/"; "/news" only redirects there, and links to the
+ * redirecting form make Google treat the two as duplicates. External links,
+ * anchors and file links (anything with a "." in the last segment) are returned
+ * unchanged, so links typed into Sanity can use either form.
+ */
+export function pageHref(href: string): string;
+export function pageHref(href: string | undefined): string | undefined;
+export function pageHref(href: string | undefined): string | undefined {
+  if (!href || !href.startsWith('/') || href.startsWith('//')) return href;
+  const m = href.match(/^([^?#]*)(.*)$/)!;
+  const [path, rest] = [m[1], m[2]];
+  const last = path.split('/').pop() ?? '';
+  if (path.endsWith('/') || last.includes('.')) return href;
+  return `${path}/${rest}`;
+}
+
 /** A project's page slug — its Sanity slug if set, otherwise derived from title. */
 export function projectSlug(p: { slug?: string; title: string }): string {
   return p.slug || slugify(p.title);

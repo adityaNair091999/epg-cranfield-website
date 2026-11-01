@@ -7,7 +7,9 @@
  * DOI-less repository copies OpenAlex returns that duplicate real papers.
  */
 
-const ALLOWED_TYPES = new Set(['article', 'review', 'proceedings-article']);
+// OpenAlex labels conference papers 'conference-paper'; 'proceedings-article'
+// is kept for older records.
+const ALLOWED_TYPES = new Set(['article', 'review', 'conference-paper', 'proceedings-article']);
 const norm = (s) => (s || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '');
 const normDoi = (d) => (d || '').toLowerCase().replace(/^https?:\/\/(dx\.)?doi\.org\//, '').trim();
 
@@ -60,11 +62,11 @@ async function fetchJsonRetry(url, tries = 4) {
   throw new Error(`OpenAlex request failed: ${last}`);
 }
 
-async function fetchOpenAlexWorks(authorId, mailto) {
+async function fetchOpenAlexWorks(filter, mailto) {
   const works = [];
   let cursor = '*';
   while (cursor) {
-    const url = `https://api.openalex.org/works?filter=author.id:${authorId}`
+    const url = `https://api.openalex.org/works?filter=${encodeURIComponent(filter)}`
       + `&per-page=200&cursor=${encodeURIComponent(cursor)}&mailto=${encodeURIComponent(mailto)}`;
     const j = await fetchJsonRetry(url);
     works.push(...(j.results || []));
@@ -85,6 +87,11 @@ export async function syncPublications(opts = {}) {
     token: opts.token || '',
   };
   const authorId = opts.authorId || 'A5088146862';
+  // OpenAlex sometimes files a new paper under a duplicate author profile (e.g.
+  // a Chinese-script name), which the author.id query misses. Also match the
+  // name as printed on the paper, limited to Cranfield-affiliated works.
+  const authorName = opts.authorName || 'Luofeng Huang';
+  const institutionId = opts.institutionId || 'I82284825'; // Cranfield University
   const mailto = opts.mailto || 'luofeng.huang@cranfield.ac.uk';
   const dryRun = opts.dryRun ?? !cfg.token;
 
@@ -109,7 +116,10 @@ export async function syncPublications(opts = {}) {
   const existDoi = new Set(existing.map((p) => normDoi(p.doi)).filter(Boolean));
   const existTitle = new Set(existing.map((p) => norm(p.title)).filter(Boolean));
 
-  const works = await fetchOpenAlexWorks(authorId, mailto);
+  const byId = await fetchOpenAlexWorks(`author.id:${authorId}`, mailto);
+  const byName = await fetchOpenAlexWorks(
+    `raw_author_name.search:"${authorName}",institutions.id:${institutionId}`, mailto);
+  const works = [...new Map([...byId, ...byName].map((w) => [w.id, w])).values()];
 
   const toCreate = [];
   const seenDoi = new Set();
@@ -129,7 +139,8 @@ export async function syncPublications(opts = {}) {
       _id: docId(w.id),
       _type: 'publication',
       title,
-      authors: (w.authorships || []).map((a) => a.author?.display_name).filter(Boolean),
+      // Name as printed on the paper; OpenAlex's profile name can be wrong.
+      authors: (w.authorships || []).map((a) => a.raw_author_name || a.author?.display_name).filter(Boolean),
       journal: w.primary_location?.source?.display_name || w.host_venue?.display_name || '',
       year: w.publication_year || null,
       doi: w.doi || undefined,

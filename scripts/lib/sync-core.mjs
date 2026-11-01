@@ -7,9 +7,7 @@
  * DOI-less repository copies OpenAlex returns that duplicate real papers.
  */
 
-// OpenAlex labels conference papers 'conference-paper'; 'proceedings-article'
-// is kept for older records.
-const ALLOWED_TYPES = new Set(['article', 'review', 'conference-paper', 'proceedings-article']);
+const ALLOWED_TYPES = new Set(['article', 'review', 'proceedings-article']);
 const norm = (s) => (s || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '');
 const normDoi = (d) => (d || '').toLowerCase().replace(/^https?:\/\/(dx\.)?doi\.org\//, '').trim();
 

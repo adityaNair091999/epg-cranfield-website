@@ -16,6 +16,11 @@ DOI, else by title) **and** is a journal article, review article, or conference
 paper. Book chapters, the lab book, course notes/reports and other grey literature
 are deliberately skipped (see `ALLOWED_TYPES` in the script).
 
+Papers are found two ways, so none slip through: by Luofeng's OpenAlex author
+profile, **and** by the name "Luofeng Huang" printed on Cranfield-affiliated
+papers. The second catches papers OpenAlex files under a duplicate profile (this
+happened in Oct 2026 with a profile under his name in Chinese characters).
+
 ## Run it manually
 
 ```bash
@@ -29,7 +34,7 @@ SANITY_WRITE_TOKEN=sk_your_editor_token node scripts/sync-publications.mjs
 Create the token at **sanity.io/manage → project → API → Tokens** (role: **Editor**).
 
 ## Run it automatically
-`.github/workflows/sync-publications.yml` runs this **monthly** (and on demand via
+`.github/workflows/sync-publications.yml` runs this **daily** (03:00 UTC) (and on demand via
 the Actions tab). It needs one repository secret:
 
 1. Create a Sanity **Editor** token (as above).
